@@ -24,7 +24,7 @@ $startTime = Get-Date
 foreach ($task in $nonCompliantTasks) {
   Write-Host "Migrating: $task" -ForegroundColor Yellow
   node .aios-core/scripts/migrate-task-to-v2.js ".aios-core/tasks/$task" 2>&1 | Out-Null
-  
+
   if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {
     $successCount++
     Write-Host "  OK" -ForegroundColor Green
@@ -42,4 +42,3 @@ Write-Host "=== Phase 3 Migration Complete ===" -ForegroundColor Green
 Write-Host "Success: $successCount" -ForegroundColor Green
 Write-Host "Failed: $failCount" -ForegroundColor $(if ($failCount -gt 0) { 'Red' } else { 'Green' })
 Write-Host "Duration: $($duration.TotalSeconds) seconds" -ForegroundColor Cyan
-

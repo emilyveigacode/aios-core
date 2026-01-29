@@ -333,7 +333,7 @@ class SquadMigrator {
         await this._copyRecursive(src, dest);
       }
 
-      this._log('Backup created successfully');
+      this._log(`Backup created successfully`);
       return backupPath;
     } catch (error) {
       throw new SquadMigratorError(
@@ -355,7 +355,10 @@ class SquadMigrator {
 
     switch (action.type) {
       case 'RENAME_MANIFEST':
-        await fs.rename(path.join(squadPath, action.from), path.join(squadPath, action.to));
+        await fs.rename(
+          path.join(squadPath, action.from),
+          path.join(squadPath, action.to)
+        );
         break;
 
       case 'CREATE_DIRECTORIES':
@@ -369,7 +372,10 @@ class SquadMigrator {
         break;
 
       case 'MOVE_FILE':
-        await fs.rename(path.join(squadPath, action.from), path.join(squadPath, action.to));
+        await fs.rename(
+          path.join(squadPath, action.from),
+          path.join(squadPath, action.to)
+        );
         break;
 
       default:
@@ -570,8 +576,7 @@ class SquadMigrator {
         lines.push('');
         lines.push('  Executed Actions:');
         for (const action of result.actions) {
-          const icon =
-            action.status === 'success' ? '✅' : action.status === 'dry-run' ? '🔍' : '❌';
+          const icon = action.status === 'success' ? '✅' : action.status === 'dry-run' ? '🔍' : '❌';
           lines.push(`    ${icon} ${this._formatAction(action)} [${action.status}]`);
           if (action.error) {
             lines.push(`       Error: ${action.error}`);

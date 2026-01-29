@@ -20,7 +20,7 @@ $fail = 0
 
 foreach ($t in $tasks) {
   node .aios-core/scripts/validate-task-v2.js ".aios-core/tasks/$t" | Out-Null
-  
+
   if ($LASTEXITCODE -eq 0) {
     $pass++
     Write-Host "✅ $t" -ForegroundColor Green
@@ -32,4 +32,3 @@ foreach ($t in $tasks) {
 
 Write-Host ""
 Write-Host "Phase 1 Results: $pass/14 tasks V2.0 compliant" -ForegroundColor Green
-

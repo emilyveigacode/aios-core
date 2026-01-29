@@ -118,4 +118,4 @@ security:
     - {{ITEM}}
     {{/EACH_ALLOWED_OPS}}
   audit_logging: {{AUDIT_LOGGING}}
-{{/IF_SECURITY_CONFIG}} 
+{{/IF_SECURITY_CONFIG}}

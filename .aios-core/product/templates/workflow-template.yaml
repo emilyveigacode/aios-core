@@ -8,7 +8,7 @@ workflow:
   description: "{{WORKFLOW_DESCRIPTION}}"
   version: "{{WORKFLOW_VERSION}}"
   type: "{{WORKFLOW_TYPE}}"  # sequential, parallel, conditional
-  
+
 metadata:
   author: "{{AUTHOR}}"
   created_date: "{{CREATED_DATE}}"
@@ -131,4 +131,4 @@ security:
     {{/EACH_ROLES}}
   {{/IF_ALLOWED_ROLES}}
   audit_logging: {{AUDIT_LOGGING}}
-{{/IF_SECURITY}} 
+{{/IF_SECURITY}}

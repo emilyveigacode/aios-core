@@ -4,7 +4,7 @@
  * Agent Assignment Resolver
  * Story: 6.1.7.1 - Task Content Completion
  * Purpose: Resolve {TODO: Agent Name} placeholders in all 114 task files
- * 
+ *
  * Maps tasks to agents based on:
  * 1. Task filename prefix (dev-, qa-, po-, etc.)
  * 2. Agent capability definitions from agent files
@@ -105,12 +105,12 @@ function determineAgent(filename) {
       return agent;
     }
   }
-  
+
   // Check generic task mappings
   if (GENERIC_TASK_MAPPINGS[filename]) {
     return GENERIC_TASK_MAPPINGS[filename];
   }
-  
+
   // Default to Dev if no clear match
   return 'UNKNOWN - NEEDS MANUAL REVIEW';
 }
@@ -118,40 +118,40 @@ function determineAgent(filename) {
 // Main: Process single task file
 function processTaskFile(filename) {
   const filePath = path.join(TASKS_DIR, filename);
-  
+
   // Skip backup files
   if (filename.includes('backup') || filename.includes('.legacy')) {
     return { skipped: true, reason: 'backup/legacy file' };
   }
-  
+
   // Read file content
   const content = fs.readFileSync(filePath, 'utf8');
-  
+
   // Check if TODO exists
   if (!TODO_PATTERN.test(content)) {
     return { skipped: true, reason: 'no TODO placeholder found' };
   }
-  
+
   // Determine agent
   const agent = determineAgent(filename);
-  
+
   if (agent === 'UNKNOWN - NEEDS MANUAL REVIEW') {
-    return { 
-      needsReview: true, 
+    return {
+      needsReview: true,
       filename,
       reason: 'No clear agent mapping found',
     };
   }
-  
+
   // Replace TODO with actual agent
   const updatedContent = content.replace(
     TODO_PATTERN,
     `responsável: ${agent}`,
   );
-  
+
   // Write updated content
   fs.writeFileSync(filePath, updatedContent, 'utf8');
-  
+
   return {
     processed: true,
     filename,
@@ -163,26 +163,26 @@ function processTaskFile(filename) {
 function main() {
   console.log('🚀 Agent Assignment Resolver\n');
   console.log(`📂 Processing tasks in: ${TASKS_DIR}\n`);
-  
+
   // Get all .md files
   const files = fs.readdirSync(TASKS_DIR)
     .filter(f => f.endsWith('.md') && !f.includes('backup') && !f.includes('.legacy'))
     .sort();
-  
+
   console.log(`📝 Found ${files.length} task files\n`);
-  
+
   const results = {
     processed: [],
     skipped: [],
     needsReview: [],
     errors: [],
   };
-  
+
   // Process each file
   files.forEach(filename => {
     try {
       const result = processTaskFile(filename);
-      
+
       if (result.processed) {
         results.processed.push(result);
         console.log(`✅ ${result.filename} → ${result.agent}`);
@@ -197,7 +197,7 @@ function main() {
       console.error(`❌ ${filename}: ${error.message}`);
     }
   });
-  
+
   // Summary
   console.log('\n' + '='.repeat(60));
   console.log('📊 Summary:');
@@ -206,12 +206,12 @@ function main() {
   console.log(`   ⏭️  Skipped: ${results.skipped.length}`);
   console.log(`   ❌ Errors: ${results.errors.length}`);
   console.log('='.repeat(60) + '\n');
-  
+
   // Save report
   const reportPath = path.join(__dirname, '../../.ai/task-1.2-agent-assignment-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(results, null, 2), 'utf8');
   console.log(`📄 Report saved: ${reportPath}\n`);
-  
+
   return results;
 }
 
@@ -228,4 +228,3 @@ if (require.main === module) {
 }
 
 module.exports = { determineAgent, processTaskFile };
-

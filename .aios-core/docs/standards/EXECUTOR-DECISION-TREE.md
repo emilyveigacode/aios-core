@@ -694,4 +694,3 @@ Use this checklist to decide executor type for any task:
 - `TASK-FORMAT-SPECIFICATION-V1.md` - Task format with executor type
 - `CLONE-ARCHITECTURE-GUIDE.md` - How to implement Clones
 - `WORKFLOW-ORCHESTRATION-GUIDE.md` - Executor execution patterns
-

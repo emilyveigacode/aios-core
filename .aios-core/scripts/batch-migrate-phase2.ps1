@@ -7,7 +7,7 @@ $tasks = @(
   'dev-optimize-performance.md',
   'dev-suggest-refactoring.md',
   'dev-backlog-debt.md',
-  
+
   # QA Agent Tasks (8 new - 2 already done in Phase 1)
   'qa-generate-tests.md',
   'qa-nfr-assess.md',
@@ -17,7 +17,7 @@ $tasks = @(
   'qa-review-story.md',
   'qa-run-tests.md',
   'qa-backlog-add-followup.md',
-  
+
   # PO/PM/SM Agent Tasks (12 tasks)
   'po-pull-story.md',
   'po-pull-story-from-clickup.md',
@@ -31,7 +31,7 @@ $tasks = @(
   'release-management.md',
   'calculate-roi.md',
   'collaborative-edit.md',
-  
+
   # Architect/Analyst Tasks (7 tasks)
   'analyze-framework.md',
   'architect-analyze-impact.md',
@@ -39,7 +39,7 @@ $tasks = @(
   'advanced-elicitation.md',
   'create-deep-research-prompt.md',
   'analyze-performance.md',
-  
+
   # UX/Data/DevOps Tasks (14 tasks)
   'ux-create-wireframe.md',
   'ux-ds-scan-artifact.md',
@@ -67,7 +67,7 @@ $startTime = Get-Date
 foreach ($task in $tasks) {
   Write-Host "Migrating: $task" -ForegroundColor Yellow
   node .aios-core/scripts/migrate-task-to-v2.js ".aios-core/tasks/$task" 2>&1 | Out-Null
-  
+
   if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {
     $successCount++
     Write-Host "  OK" -ForegroundColor Green
@@ -85,4 +85,3 @@ Write-Host "=== Phase 2 Migration Complete ===" -ForegroundColor Green
 Write-Host "Success: $successCount" -ForegroundColor Green
 Write-Host "Failed: $failCount" -ForegroundColor $(if ($failCount -gt 0) { 'Red' } else { 'Green' })
 Write-Host "Duration: $($duration.TotalSeconds) seconds" -ForegroundColor Cyan
-

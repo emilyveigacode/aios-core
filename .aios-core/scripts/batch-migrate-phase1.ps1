@@ -2,7 +2,7 @@
 
 $tasks = @(
   'create-next-story.md',
-  'brownfield-create-story.md', 
+  'brownfield-create-story.md',
   'brownfield-create-epic.md',
   'create-agent.md',
   'modify-agent.md',
@@ -21,7 +21,7 @@ $failCount = 0
 foreach ($task in $tasks) {
   Write-Host "`n=== Migrating $task ===" -ForegroundColor Cyan
   node .aios-core/scripts/migrate-task-to-v2.js ".aios-core/tasks/$task"
-  
+
   if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {
     $successCount++
   } else {
@@ -33,4 +33,3 @@ foreach ($task in $tasks) {
 Write-Host "`n=== Phase 1 Migration Complete ===" -ForegroundColor Green
 Write-Host "Success: $successCount" -ForegroundColor Green
 Write-Host "Failed: $failCount" -ForegroundColor $(if ($failCount -gt 0) { 'Red' } else { 'Green' })
-

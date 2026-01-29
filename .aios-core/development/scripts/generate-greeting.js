@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 /**
  * Unified Greeting Generator
- * 
+ *
  * Orchestrates all greeting components for optimal performance:
  * - Agent definition (via expanded agent-config-loader.js)
  * - Session context (session-context-loader.js)
  * - Project status (project-status-loader.js)
  * - User preferences (greeting-preference-manager.js)
  * - Contextual adaptation (greeting-builder.js)
- * 
+ *
  * Performance Targets:
  * - With cache: <50ms
  * - Without cache: <150ms (timeout protection)
  * - Fallback: <10ms
- * 
+ *
  * Usage: node generate-greeting.js <agent-id>
- * 
+ *
  * Part of Story 6.1.4: Unified Greeting System Integration
  */
 
@@ -29,33 +29,33 @@ const yaml = require('js-yaml');
 
 /**
  * Generate unified greeting for agent activation
- * 
+ *
  * @param {string} agentId - Agent identifier (e.g., 'qa', 'dev')
  * @returns {Promise<string>} Formatted greeting string
  * @throws {Error} If agent file not found or invalid
- * 
+ *
  * @example
  * const greeting = await generateGreeting('qa');
  * console.log(greeting);
  */
 async function generateGreeting(agentId) {
   const startTime = Date.now();
-  
+
   try {
     // Load core config
     const coreConfigPath = path.join(process.cwd(), '.aios-core', 'core-config.yaml');
     const coreConfigContent = await fs.readFile(coreConfigPath, 'utf8');
     const coreConfig = yaml.load(coreConfigContent);
-    
+
     // Load everything in parallel using expanded AgentConfigLoader
     const loader = new AgentConfigLoader(agentId);
-    
+
     const [complete, sessionContext, projectStatus] = await Promise.all([
       loader.loadComplete(coreConfig), // Loads config + definition
       loadSessionContext(agentId),
       loadProjectStatus(),
     ]);
-    
+
     // Build unified context
     const context = {
       conversationHistory: [], // Not available in Claude Code
@@ -67,7 +67,7 @@ async function generateGreeting(agentId) {
       workflowActive: sessionContext.workflowActive,
       sessionStory: sessionContext.currentStory || null, // Session's current story (more accurate than git)
     };
-    
+
     // Ensure agent has persona_profile and persona from definition
     const agentWithPersona = {
       ...complete.agent,
@@ -75,18 +75,18 @@ async function generateGreeting(agentId) {
       persona: complete.definition?.persona || complete.persona,
       commands: complete.commands || complete.definition?.commands || [],
     };
-    
+
     // Generate greeting using GreetingBuilder
     const builder = new GreetingBuilder();
     const greeting = await builder.buildGreeting(agentWithPersona, context);
-    
+
     const duration = Date.now() - startTime;
     if (duration > 100) {
       console.warn(`[generate-greeting] Slow generation: ${duration}ms`);
     }
-    
+
     return greeting;
-    
+
   } catch (error) {
     console.error('[generate-greeting] Error:', {
       agentId,
@@ -94,7 +94,7 @@ async function generateGreeting(agentId) {
       stack: error.stack,
       timestamp: new Date().toISOString(),
     });
-    
+
     // Fallback: Simple greeting
     return generateFallbackGreeting(agentId);
   }
@@ -135,7 +135,7 @@ function generateFallbackGreeting(agentId) {
 // CLI interface
 if (require.main === module) {
   const agentId = process.argv[2];
-  
+
   if (!agentId) {
     console.error('Usage: node generate-greeting.js <agent-id>');
     console.error('\nExamples:');
@@ -143,7 +143,7 @@ if (require.main === module) {
     console.error('  node generate-greeting.js dev');
     process.exit(1);
   }
-  
+
   generateGreeting(agentId)
     .then(greeting => {
       console.log(greeting);
@@ -157,4 +157,3 @@ if (require.main === module) {
 }
 
 module.exports = { generateGreeting };
-

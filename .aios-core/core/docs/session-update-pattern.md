@@ -311,4 +311,3 @@ const greeting = await builder.buildGreeting(agentDef, { conversationHistory });
 - [Greeting System Architecture](./greeting-system-architecture.md)
 
 **Last Updated:** 2025-01-18 (Story 6.1.4)
-

@@ -492,4 +492,3 @@ The validator (`validate-output-pattern.js`) enforces:
 
 **Last Updated:** 2025-01-15  
 **Story:** 6.1.6 - Output Formatter Implementation
-

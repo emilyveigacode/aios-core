@@ -1411,4 +1411,3 @@ atomic_layer: Strategy    # ← ADDED
 - `EXECUTOR-DECISION-TREE.md` - How to choose executor type
 - `TEMPLATE-SYSTEM-GUIDE.md` - Template design patterns
 - `TOOLS-AND-SCRIPTS-CATALOG.md` - Available tools reference
-
