@@ -11,16 +11,10 @@
 - `*backlog-review` - Generate backlog review for sprint planning
 - `*backlog-summary` - Quick backlog status summary
 - `*stories-index` - Regenerate story index from docs/stories/
-- `*create-story` - Create user story from requirements
-- `*validate-story-draft` - Validate story quality and completeness
+- `*validate-story-draft` - Validate story quality and completeness (START of story lifecycle)
+- `*close-story` - Close completed story, update epic/backlog, suggest next (END of story lifecycle)
 - `*execute-checklist-po` - Run PO master checklist
-- `*correct-course` - Analyze and correct process deviations
-- `*shard-doc {document} {destination}` - Break document into smaller parts
-- `*doc-out` - Output complete document to file
-- `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping (on/off)
-- `*exit` - Exit PO mode
 
 ## All Commands
 
@@ -31,18 +25,16 @@
 - `*backlog-prioritize` - Re-prioritize backlog item
 - `*backlog-schedule` - Assign item to sprint
 - `*stories-index` - Regenerate story index from docs/stories/
-- `*create-epic` - Create epic for brownfield projects
-- `*create-story` - Create user story from requirements
-- `*validate-story-draft` - Validate story quality and completeness
+- `*validate-story-draft` - Validate story quality and completeness (START of story lifecycle)
+- `*close-story` - Close completed story, update epic/backlog, suggest next (END of story lifecycle)
 - `*sync-story` - Sync story to PM tool (ClickUp, GitHub, Jira, local)
 - `*pull-story` - Pull story updates from PM tool
 - `*execute-checklist-po` - Run PO master checklist
-- `*correct-course` - Analyze and correct process deviations
-- `*shard-doc {document} {destination}` - Break document into smaller parts
+- `*shard-doc` - Break document into smaller parts
 - `*doc-out` - Output complete document to file
 - `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping (on/off)
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit PO mode
 
 ## Collaboration

@@ -17,6 +17,7 @@ const yaml = require('js-yaml');
  * @param {Array<string>} [options.selectedIDEs] - Selected IDEs from Story 1.4
  * @param {Array<Object>} [options.mcpServers] - MCP server configurations from Story 1.5
  * @param {string} [options.aiosVersion] - AIOS version (default: 2.1.0)
+ * @param {string} [options.userProfile] - User profile from Story 10.2 (bob|advanced)
  * @returns {string} core-config.yaml content
  */
 function generateCoreConfig(options = {}) {
@@ -25,6 +26,7 @@ function generateCoreConfig(options = {}) {
     selectedIDEs = [],
     mcpServers = [],
     aiosVersion = '2.1.0',
+    userProfile = 'advanced', // Default for backward compatibility (Story 10.2)
   } = options;
 
   const config = {
@@ -38,13 +40,25 @@ function generateCoreConfig(options = {}) {
       version: aiosVersion,
     },
 
+    // User Profile Configuration (Story 10.2 - Epic 10: User Profile System)
+    // PRD: AIOS v2.0 "Projeto Bob" - Seção 2
+    // Controls which interface mode is active for the user
+    // Options: bob (simplified) | advanced (full access)
+    user_profile: userProfile,
+
+    // Language: Delegated to Claude Code native settings.json (Story ACT-12)
+    // See: ~/.claude/settings.json → { "language": "portuguese" }
+
     // IDE Configuration (from Story 1.4)
     ide: {
-      selected: selectedIDEs.length > 0 ? selectedIDEs : ['vscode'],
+      selected: selectedIDEs.length > 0 ? selectedIDEs : ['claude-code', 'codex'],
       configs: {
-        vscode: selectedIDEs.includes('vscode') || selectedIDEs.length === 0,
+        vscode: selectedIDEs.includes('vscode') || selectedIDEs.length === 0, // Legacy compatibility
+        codex: selectedIDEs.includes('codex'),
+        gemini: selectedIDEs.includes('gemini'),
         cursor: selectedIDEs.includes('cursor'),
-        windsurf: selectedIDEs.includes('windsurf'),
+        'github-copilot': selectedIDEs.includes('github-copilot'),
+        antigravity: selectedIDEs.includes('antigravity'),
         zed: selectedIDEs.includes('zed'),
         'claude-desktop': selectedIDEs.includes('claude-desktop'),
         'claude-code': selectedIDEs.includes('claude-code'),
@@ -107,7 +121,7 @@ function generateCoreConfig(options = {}) {
       enabled: true,
       heavySections: [
         'pvMindContext',
-        'expansionPacks',
+        'squads',
         'registry',
       ],
     },
@@ -135,7 +149,7 @@ function generateCoreConfig(options = {}) {
     scriptsLocation: '.aios-core/scripts',
     dataLocation: '.aios-core/data',
     elicitationLocation: '.aios-core/elicitation',
-    expansionPacksLocation: 'expansion-packs',
+    squadsLocation: 'squads',
     mindsLocation: 'outputs/minds',
 
     // Project Status Configuration

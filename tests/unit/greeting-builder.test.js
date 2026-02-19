@@ -12,6 +12,8 @@
  * - Parallel operations
  * - Fallback strategy
  * - Backwards compatibility
+ * - Story 10.3: User profile-based command filtering
+ * - Story ACT-12: Language delegated to Claude Code settings.json
  */
 
 const GreetingBuilder = require('../../.aios-core/development/scripts/greeting-builder');
@@ -25,6 +27,14 @@ jest.mock('../../.aios-core/infrastructure/scripts/project-status-loader', () =>
   loadProjectStatus: jest.fn(),
   formatStatusDisplay: jest.fn(),
 }));
+jest.mock('../../.aios-core/core/config/config-resolver', () => ({
+  resolveConfig: jest.fn(() => ({
+    config: { user_profile: 'advanced' },
+    warnings: [],
+    legacy: false,
+  })),
+}));
+const { resolveConfig: mockResolveConfig } = require('../../.aios-core/core/config/config-resolver');
 jest.mock('../../.aios-core/development/scripts/greeting-preference-manager', () => {
   return jest.fn().mockImplementation(() => ({
     getPreference: jest.fn().mockReturnValue('auto'),
@@ -109,8 +119,8 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation now always uses archetypal greeting for richer presentation
-      expect(greeting).toContain('TestAgent the Tester ready');
+      // Story ACT-7: Existing sessions use named greeting (brief) instead of archetypal
+      expect(greeting).toContain('TestAgent (Tester) ready');
       expect(greeting).not.toContain('Test automation expert'); // No role
       expect(greeting).toContain('Quick Commands'); // Quick commands
     });
@@ -120,8 +130,8 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation now always uses archetypal greeting for richer presentation
-      expect(greeting).toContain('TestAgent the Tester ready');
+      // Story ACT-7: Workflow sessions use named greeting (focused) instead of archetypal
+      expect(greeting).toContain('TestAgent (Tester) ready');
       expect(greeting).not.toContain('Test automation expert'); // No role
       expect(greeting).toContain('Key Commands'); // Key commands only
     });
@@ -275,10 +285,10 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation uses internal _formatProjectStatus instead of formatStatusDisplay
+      // Story ACT-7: Now uses narrative format when enriched context is available
       // Just verify project status is shown in greeting
       expect(greeting).toContain('Project Status');
-      expect(greeting).toContain('Branch');
+      expect(greeting).toContain('branch');
     });
 
     test('should use condensed format for workflow session', async () => {
@@ -403,6 +413,257 @@ describe('GreetingBuilder', () => {
       const warning = builder.buildGitWarning();
       expect(warning).toContain('Git Configuration Needed');
       expect(warning).toContain('git init');
+    });
+  });
+
+  describe('User Profile-Based Filtering (Story 10.3)', () => {
+    let mockPmAgent;
+    let mockDevAgent;
+
+    beforeEach(() => {
+      // PM Agent (Bob)
+      mockPmAgent = {
+        id: 'pm',
+        name: 'Morgan',
+        icon: '📋',
+        persona_profile: {
+          greeting_levels: {
+            minimal: '📋 PM ready',
+            named: '📋 Morgan (PM) ready',
+            archetypal: '📋 Morgan the Product Manager ready',
+          },
+        },
+        persona: {
+          role: 'Product Manager and orchestrator',
+        },
+        commands: [
+          { name: 'help', visibility: ['full', 'quick', 'key'], description: 'Show help' },
+          { name: 'create-story', visibility: ['full', 'quick'], description: 'Create new story' },
+          { name: 'status', visibility: ['full', 'quick', 'key'], description: 'Project status' },
+        ],
+      };
+
+      // Dev Agent (non-PM)
+      mockDevAgent = {
+        id: 'dev',
+        name: 'Dex',
+        icon: '👨‍💻',
+        persona_profile: {
+          greeting_levels: {
+            minimal: '👨‍💻 Dev ready',
+            named: '👨‍💻 Dex (Developer) ready',
+            archetypal: '👨‍💻 Dex the Developer ready',
+          },
+        },
+        persona: {
+          role: 'Software Developer',
+        },
+        commands: [
+          { name: 'help', visibility: ['full', 'quick', 'key'], description: 'Show help' },
+          { name: 'develop', visibility: ['full', 'quick'], description: 'Start development' },
+          { name: 'test', visibility: ['full'], description: 'Run tests' },
+        ],
+      };
+    });
+
+    describe('loadUserProfile()', () => {
+      test('should return advanced as default when resolveConfig returns no user_profile', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: {},
+          warnings: [],
+          legacy: false,
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
+      });
+
+      test('should return advanced when user_profile is missing from config', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { project: { type: 'GREENFIELD' } },
+          warnings: [],
+          legacy: false,
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
+      });
+
+      test('should return advanced when user_profile is invalid', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'invalid_value' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
+      });
+
+      test('should return bob when user_profile is bob', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('bob');
+      });
+
+      test('should return advanced when user_profile is advanced', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'advanced' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
+      });
+
+      test('should return advanced when resolveConfig throws', () => {
+        mockResolveConfig.mockImplementationOnce(() => {
+          throw new Error('Config load failed');
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
+      });
+    });
+
+    describe('filterCommandsByVisibility() with user profile', () => {
+      test('should return commands for PM agent in bob mode (AC1)', () => {
+        const commands = builder.filterCommandsByVisibility(mockPmAgent, 'new', 'bob');
+        expect(commands.length).toBeGreaterThan(0);
+        expect(commands.some(c => c.name === 'help')).toBe(true);
+      });
+
+      test('should return empty array for non-PM agent in bob mode (AC1)', () => {
+        const commands = builder.filterCommandsByVisibility(mockDevAgent, 'new', 'bob');
+        expect(commands).toEqual([]);
+      });
+
+      test('should return commands for any agent in advanced mode (AC2)', () => {
+        const pmCommands = builder.filterCommandsByVisibility(mockPmAgent, 'new', 'advanced');
+        const devCommands = builder.filterCommandsByVisibility(mockDevAgent, 'new', 'advanced');
+
+        expect(pmCommands.length).toBeGreaterThan(0);
+        expect(devCommands.length).toBeGreaterThan(0);
+      });
+
+      test('should default to advanced when userProfile not provided (AC6)', () => {
+        // filterCommandsByVisibility without userProfile should behave as advanced
+        const commands = builder.filterCommandsByVisibility(mockDevAgent, 'new');
+        expect(commands.length).toBeGreaterThan(0);
+      });
+    });
+
+    describe('buildBobModeRedirect()', () => {
+      test('should return redirect message with agent name', () => {
+        const redirect = builder.buildBobModeRedirect(mockDevAgent);
+
+        expect(redirect).toContain('Modo Assistido');
+        expect(redirect).toContain('@pm');
+        expect(redirect).toContain('Bob');
+        expect(redirect).toContain('Dex');
+      });
+
+      test('should return redirect message without agent name when agent is null', () => {
+        const redirect = builder.buildBobModeRedirect(null);
+
+        expect(redirect).toContain('Modo Assistido');
+        expect(redirect).toContain('@pm');
+        expect(redirect).toContain('Este agente');
+      });
+    });
+
+    describe('Full greeting in bob mode', () => {
+      test('PM agent should show commands in bob mode (AC5)', async () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const greeting = await builder.buildGreeting(mockPmAgent, {});
+
+        expect(greeting).toContain('Morgan');
+        expect(greeting).toContain('help');
+        expect(greeting).not.toContain('Modo Assistido');
+      });
+
+      test('Non-PM agent should show redirect message in bob mode (AC4)', async () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const greeting = await builder.buildGreeting(mockDevAgent, {});
+
+        expect(greeting).toContain('Dex');
+        expect(greeting).toContain('Modo Assistido');
+        expect(greeting).toContain('@pm');
+        expect(greeting).not.toContain('develop'); // No commands shown
+      });
+
+      test('All agents should show normal commands in advanced mode (AC2)', async () => {
+        mockResolveConfig.mockReturnValue({
+          config: { user_profile: 'advanced' },
+          warnings: [],
+          legacy: false,
+        });
+
+        const pmGreeting = await builder.buildGreeting(mockPmAgent, {});
+        const devGreeting = await builder.buildGreeting(mockDevAgent, {});
+
+        expect(pmGreeting).toContain('help');
+        expect(pmGreeting).not.toContain('Modo Assistido');
+
+        expect(devGreeting).toContain('help');
+        expect(devGreeting).not.toContain('Modo Assistido');
+      });
+    });
+  });
+
+  describe('ACT-12: Language delegated to Claude Code settings.json', () => {
+    test('buildSimpleGreeting uses English help prompt (language handled natively by Claude Code)', () => {
+      const greeting = builder.buildSimpleGreeting(mockAgent);
+      expect(greeting).toContain('Type `*help`');
+    });
+
+    test('buildFixedLevelGreeting uses English help text', () => {
+      const greeting = builder.buildFixedLevelGreeting(mockAgent, 'named');
+      expect(greeting).toContain('Type `*help`');
+    });
+
+    test('buildPresentation uses English welcome back', () => {
+      const sectionContext = {
+        sessionType: 'existing',
+      };
+
+      const presentation = builder.buildPresentation(mockAgent, 'existing', '', sectionContext);
+      expect(presentation).toContain('welcome back');
+    });
+
+    test('buildFooter uses English guide prompt for new sessions', () => {
+      const sectionContext = {
+        sessionType: 'new',
+      };
+
+      const footer = builder.buildFooter(mockAgent, sectionContext);
+      expect(footer).toContain('Type `*guide`');
+    });
+
+    test('buildFooter uses English help prompt for existing sessions', () => {
+      const sectionContext = {
+        sessionType: 'existing',
+      };
+
+      const footer = builder.buildFooter(mockAgent, sectionContext);
+      expect(footer).toContain('Type `*help`');
+      expect(footer).toContain('*session-info');
     });
   });
 });

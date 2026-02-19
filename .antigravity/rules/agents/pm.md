@@ -16,15 +16,30 @@ NOT for: Market research or competitive analysis → Use @analyst. Technical arc
 - `*create-brownfield-prd` - Create PRD for existing projects
 - `*create-epic` - Create epic for brownfield
 - `*create-story` - Create user story
-- `*doc-out` - Output complete document
-- `*shard-prd` - Break PRD into smaller parts
-- `*research {topic}` - Generate deep research prompt
-- `*correct-course` - Analyze and correct deviations
+- `*research` - Generate deep research prompt
+- `*execute-epic` - Execute epic plan with wave-based parallel development
 - `*gather-requirements` - Elicit and document requirements from stakeholders
 - `*write-spec` - Generate formal specification document from requirements
+- `*toggle-profile` - Toggle user profile between bob (assisted) and advanced modes
+- `*guide` - Show comprehensive usage guide for this agent
+
+## All Commands
+
+- `*help` - Show all available commands with descriptions
+- `*create-prd` - Create product requirements document
+- `*create-brownfield-prd` - Create PRD for existing projects
+- `*create-epic` - Create epic for brownfield
+- `*create-story` - Create user story
+- `*doc-out` - Output complete document
+- `*shard-prd` - Break PRD into smaller parts
+- `*research` - Generate deep research prompt
+- `*execute-epic` - Execute epic plan with wave-based parallel development
+- `*gather-requirements` - Elicit and document requirements from stakeholders
+- `*write-spec` - Generate formal specification document from requirements
+- `*toggle-profile` - Toggle user profile between bob (assisted) and advanced modes
 - `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit PM mode
 
 ## Collaboration

@@ -11,7 +11,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 class ElicitationSessionManager {
-  constructor(sessionDir = '.aios-sessions') {
+  constructor(sessionDir = '.aios/sessions') {
     this.sessionDir = path.resolve(process.cwd(), sessionDir);
     this.activeSession = null;
   }
@@ -138,7 +138,7 @@ class ElicitationSessionManager {
             progress: session.totalSteps > 0 ?
               Math.round((session.currentStep / session.totalSteps) * 100) : 0,
           });
-        } catch (error) {
+        } catch (_error) {
           // Skip invalid session files
           console.warn(`Invalid session file: ${file}`);
         }

@@ -5,16 +5,33 @@ workflow:
     Agent workflow for enhancing existing full-stack applications with new features,
     modernization, or significant changes. Handles existing system analysis and safe integration.
   type: brownfield
+  version: "1.0"
   project_types:
     - feature-addition
     - refactoring
     - modernization
     - integration-enhancement
 
+  metadata:
+    elicit: true
+    confirmation_required: true
+
+  phases:
+    - phase_1: Enhancement Classification & Routing
+    - phase_2: Planning & Documentation
+    - phase_3: Document Sharding
+    - phase_4: Development Cycle
+
   sequence:
-    - step: enhancement_classification
+    - phase: 1
+      name: Enhancement Classification & Routing
+
+    - id: analyst-classify-enhancement
+      step: enhancement_classification
       agent: analyst
       action: classify enhancement scope
+      duration_estimate: "10-15 min"
+      elicit: true
       notes: |
         Determine enhancement complexity to route to appropriate path:
         - Single story (< 4 hours) → Use brownfield-create-story task
@@ -23,7 +40,10 @@ workflow:
 
         Ask user: "Can you describe the enhancement scope? Is this a small fix, a feature addition, or a major enhancement requiring architectural changes?"
 
-    - step: routing_decision
+    - id: routing-decision
+      step: routing_decision
+      meta: routing
+      duration_estimate: "5 min"
       condition: based_on_classification
       routes:
         single_story:
@@ -38,9 +58,14 @@ workflow:
           continue: to_next_step
           notes: "Continue with comprehensive planning workflow below."
 
-    - step: documentation_check
+    - phase: 2
+      name: Planning & Documentation
+
+    - id: analyst-check-documentation
+      step: documentation_check
       agent: analyst
       action: check existing documentation
+      duration_estimate: "10-20 min"
       condition: major_enhancement_path
       notes: |
         Check if adequate project documentation exists:
@@ -49,25 +74,32 @@ workflow:
         - If adequate: Skip document-project, proceed to PRD
         - If inadequate: Run document-project first
 
-    - step: project_analysis
+    - id: architect-analyze-project
+      step: project_analysis
       agent: architect
       action: analyze existing project and use task document-project
-      creates: brownfield-architecture.md (or multiple documents)
+      creates: [brownfield-architecture.md]
+      duration_estimate: "30-60 min"
       condition: documentation_inadequate
       notes: "Run document-project to capture current system state, technical debt, and constraints. Pass findings to PRD creation."
 
-    - agent: pm
+    - id: pm-create-prd
+      agent: pm
       creates: prd.md
       uses: brownfield-prd-tmpl
+      duration_estimate: "30-60 min"
       requires: existing_documentation_or_analysis
       notes: |
         Creates PRD for major enhancement. If document-project was run, reference its output to avoid re-analysis.
         If skipped, use existing project documentation.
         SAVE OUTPUT: Copy final prd.md to your project's docs/ folder.
 
-    - step: architecture_decision
-      agent: pm/architect
+    - id: pm-architecture-decision
+      step: architecture_decision
+      agent: pm
+      alternative_agent: architect
       action: determine if architecture document needed
+      duration_estimate: "10-15 min"
       condition: after_prd_creation
       notes: |
         Review PRD to determine if architectural planning is needed:
@@ -76,36 +108,56 @@ workflow:
         - Platform/infrastructure changes → Create architecture doc
         - Following existing patterns → Skip to story creation
 
-    - agent: architect
+    - id: architect-create-architecture
+      agent: architect
       creates: architecture.md
       uses: brownfield-architecture-tmpl
+      duration_estimate: "30-60 min"
       requires: prd.md
       condition: architecture_changes_needed
       notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's docs/ folder."
 
-    - agent: po
+    - id: po-validate-artifacts
+      agent: po
       validates: all_artifacts
       uses: po-master-checklist
+      duration_estimate: "15-30 min"
       notes: "Validates all documents for integration safety and completeness. May require updates to any document."
 
-    - agent: various
+    - id: po-delegate-fixes
+      agent: po
+      action: delegate_fixes
+      delegates_to: [analyst, pm, architect]
       updates: any_flagged_documents
+      duration_estimate: "15-30 min"
       condition: po_checklist_issues
-      notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to docs/ folder."
+      notes: "If PO finds issues, PO delegates fixes to the relevant agent and re-validates updated documents in docs/ folder."
 
-    - agent: po
+    - phase: 3
+      name: Document Sharding
+
+    - id: po-shard-documents
+      agent: po
       action: shard_documents
       creates: sharded_docs
-      requires: all_artifacts_in_project
+      duration_estimate: "15-30 min"
+      requires:  # all validated artifacts must be saved in project docs/ folder
+        - prd.md
+        - architecture.md
       notes: |
         Shard documents for IDE development:
         - Option A: Use PO agent to shard: @po then ask to shard docs/prd.md
         - Option B: Manual: Drag shard-doc task + docs/prd.md into chat
         - Creates docs/prd/ and docs/architecture/ folders with sharded content
 
-    - agent: sm
+    - phase: 4
+      name: Development Cycle
+
+    - id: sm-create-story
+      agent: sm
       action: create_story
       creates: story.md
+      duration_estimate: "15-30 min"
       requires: sharded_docs_or_brownfield_docs
       repeats: for_each_epic_or_enhancement
       notes: |
@@ -116,9 +168,12 @@ workflow:
         - Story starts in "Draft" status
         - May require additional context gathering for brownfield
 
-    - agent: analyst/pm
+    - id: pm-review-draft-story
+      agent: pm
+      alternative_agent: analyst
       action: review_draft_story
       updates: story.md
+      duration_estimate: "10-20 min"
       requires: story.md
       optional: true
       condition: user_wants_story_review
@@ -128,9 +183,11 @@ workflow:
         - Review story completeness and alignment
         - Update story status: Draft → Approved
 
-    - agent: dev
+    - id: dev-implement-story
+      agent: dev
       action: implement_story
       creates: implementation_files
+      duration_estimate: "1-4 hours"
       requires: story.md
       notes: |
         Dev Agent (New Chat): @dev
@@ -138,9 +195,11 @@ workflow:
         - Updates File List with all changes
         - Marks story as "Review" when complete
 
-    - agent: qa
+    - id: qa-review-implementation
+      agent: qa
       action: review_implementation
       updates: implementation_files
+      duration_estimate: "20-40 min"
       requires: implementation_files
       optional: true
       notes: |
@@ -150,24 +209,30 @@ workflow:
         - Leaves checklist for remaining items
         - Updates story status (Review → Done or stays Review)
 
-    - agent: dev
+    - id: dev-address-qa-feedback
+      agent: dev
       action: address_qa_feedback
       updates: implementation_files
+      requires: implementation_files
+      duration_estimate: "30-60 min"
       condition: qa_left_unchecked_items
       notes: |
         If QA left unchecked items:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
-    - repeat_development_cycle:
-      action: continue_for_all_stories
+    - meta: repeat
+      target_steps: [sm-create-story, dev-implement-story, qa-review-implementation]
+      condition: stories_remaining
       notes: |
         Repeat story cycle (SM → Dev → QA) for all epic stories
         Continue until all stories in PRD are complete
 
-    - agent: po
+    - id: po-epic-retrospective
+      agent: po
       action: epic_retrospective
       creates: epic-retrospective.md
+      duration_estimate: "15-30 min"
       condition: epic_complete
       optional: true
       notes: |
@@ -176,8 +241,7 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
-    - workflow_end:
-      action: project_complete
+    - meta: end
       notes: |
         All stories implemented and reviewed!
         Project development phase complete.
@@ -208,7 +272,7 @@ workflow:
         K --> L
 
         L --> M{PO finds issues?}
-        M -->|Yes| N[Fix issues]
+        M -->|Yes| N[po: delegate fixes to relevant agent]
         M -->|No| O[po: shard documents]
         N --> L
 
@@ -219,7 +283,7 @@ workflow:
 
         R --> T{Review draft?}
         S --> T
-        T -->|Yes| U[review & approve]
+        T -->|Yes| U[pm/analyst: review & approve story]
         T -->|No| V[dev: implement]
         U --> V
 
@@ -258,6 +322,12 @@ workflow:
       - Significant integration work required
       - Risk assessment and mitigation planning necessary
       - Multiple team members will work on related changes
+
+    when_not_to_use:
+      - New project from scratch (use greenfield-fullstack)
+      - Service-only enhancement (use brownfield-service)
+      - Frontend-only enhancement (use brownfield-ui)
+      - Technical debt assessment only (use brownfield-discovery)
 
   handoff_prompts:
     classification_complete: |

@@ -1,7 +1,7 @@
 <!--
   Tradução: PT-BR
-  Original: /docs/en/installation/README.md
-  Última sincronização: 2026-01-26
+  Original: /docs/installation/README.md
+  Última sincronização: 2026-02-01
 -->
 
 # Documentação de Instalação do Synkra AIOS
@@ -10,8 +10,8 @@
 
 ---
 
-**Versão:** 2.1.0
-**Última Atualização:** 2025-01-24
+**Versão:** 2.1.1
+**Última Atualização:** 2026-02-01
 
 ---
 
@@ -35,7 +35,7 @@ Este diretório contém documentação abrangente de instalação e configuraç�
 
 | Documento                                    | Descrição                               | Público-alvo      |
 | -------------------------------------------- | --------------------------------------- | ----------------- |
-| [Quick Start (v2.1)](./v2.1-quick-start.md)  | Configuração rápida para novos usuários | Iniciantes        |
+| [Quick Start (v4)](./v4-quick-start.md)  | Configuração rápida para novos usuários | Iniciantes        |
 | [Solução de Problemas](./troubleshooting.md) | Problemas comuns e soluções             | Todos os usuários |
 | [FAQ](./faq.md)                              | Perguntas frequentes                    | Todos os usuários |
 
@@ -88,10 +88,6 @@ npx @synkra/aios-core install --force-upgrade
 | -------------- | ------------------- |
 | Claude Code    | `/dev`, `/qa`, etc. |
 | Cursor         | `@dev`, `@qa`, etc. |
-| Windsurf       | `@dev`, `@qa`, etc. |
-| Trae           | `@dev`, `@qa`, etc. |
-| Roo Code       | Seletor de modo     |
-| Cline          | `@dev`, `@qa`, etc. |
 | Gemini CLI     | Menção no prompt    |
 | GitHub Copilot | Modos de chat       |
 

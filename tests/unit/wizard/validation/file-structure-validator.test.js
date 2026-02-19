@@ -6,7 +6,7 @@
 const fs = require('fs');
 const {
   validateFiles,
-} = require('../../../../src/wizard/validation/validators/file-structure-validator');
+} = require('../../../../packages/installer/src/wizard/validation/validators/file-structure-validator');
 
 // Mock fs module
 jest.mock('fs');
@@ -23,7 +23,7 @@ describe('File Structure Validator', () => {
       fs.statSync.mockReturnValue({ isDirectory: () => true });
 
       const fileContext = {
-        ideConfigs: ['.cursor/settings.json', '.windsurf/settings.json'],
+        ideConfigs: ['.cursor/settings.json', '.github/copilot-instructions.md'],
         env: '.env',
         coreConfig: '.aios-core/core-config.yaml',
         mcpConfig: '.mcp.json',
@@ -57,7 +57,7 @@ describe('File Structure Validator', () => {
             severity: 'critical',
             code: 'ENV_FILE_MISSING',
           }),
-        ])
+        ]),
       );
     });
 
@@ -80,7 +80,7 @@ describe('File Structure Validator', () => {
             severity: 'high',
             code: 'CORE_CONFIG_MISSING',
           }),
-        ])
+        ]),
       );
     });
 
@@ -105,7 +105,7 @@ describe('File Structure Validator', () => {
       fs.existsSync.mockReturnValue(true);
 
       const fileContext = {
-        ideConfigs: ['.cursor/settings.json', '.windsurf/settings.json'],
+        ideConfigs: ['.cursor/settings.json', '.github/copilot-instructions.md'],
       };
 
       // When
@@ -136,7 +136,7 @@ describe('File Structure Validator', () => {
             severity: 'critical',
             code: 'VALIDATION_ERROR',
           }),
-        ])
+        ]),
       );
     });
 
@@ -161,7 +161,7 @@ describe('File Structure Validator', () => {
           expect.objectContaining({
             code: 'ENV_PERMISSIONS_INSECURE',
           }),
-        ])
+        ]),
       );
 
       // Cleanup

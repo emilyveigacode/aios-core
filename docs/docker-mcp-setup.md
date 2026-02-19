@@ -419,8 +419,8 @@ Only use docker-gateway when:
 - [Desktop Commander MCP Guide](./guides/mcp/desktop-commander.md)
 - [MCP Global Setup Guide](./guides/mcp-global-setup.md)
 - [MCP Architecture Diagrams](./architecture/mcp-system-diagrams.md)
-- [DevOps Agent Reference](./agent-reference-guide.md#devops)
+- [DevOps Agent](../.aios-core/development/agents/devops.md)
 
 ---
 
-_Synkra AIOS Docker MCP Setup Guide v2.1.0_
+_Synkra AIOS Docker MCP Setup Guide v4.2.11_

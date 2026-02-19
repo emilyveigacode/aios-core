@@ -5,22 +5,21 @@ This directory contains workflow definitions for the Synkra AIOS framework. Work
 ## Available Workflows
 
 ### Development Workflows
-- **brownfield-fullstack.md** - Workflow for existing full-stack projects
-- **brownfield-service.md** - Workflow for existing service/backend projects
-- **brownfield-ui.md** - Workflow for existing UI/frontend projects
-- **greenfield-fullstack.md** - Workflow for new full-stack projects
-- **greenfield-service.md** - Workflow for new service/backend projects
-- **greenfield-ui.md** - Workflow for new UI/frontend projects
+- **brownfield-discovery.yaml** - Comprehensive technical debt assessment for existing projects
+- **brownfield-fullstack.yaml** - Workflow for existing full-stack projects
+- **brownfield-service.yaml** - Workflow for existing service/backend projects
+- **brownfield-ui.yaml** - Workflow for existing UI/frontend projects
+- **greenfield-fullstack.yaml** - Workflow for new full-stack projects
+- **greenfield-service.yaml** - Workflow for new service/backend projects
+- **greenfield-ui.yaml** - Workflow for new UI/frontend projects
 
 ### Configuration Workflows
-- **setup-environment.yaml** - Configure IDE (Windsurf/Cursor/Claude Code) with AIOS development rules
 
 ## Setup Environment Workflow
 
 The `setup-environment` workflow helps developers configure their IDE for optimal AIOS development experience.
 
 ### Features
-- Detects installed IDEs (Windsurf, Cursor, Claude Code)
 - Backs up existing IDE configurations
 - Applies AIOS-specific development rules
 - Verifies GitHub CLI installation and authentication
@@ -40,14 +39,12 @@ npm run setup:environment
 ```
 
 ### What It Does
-1. **IDE Detection** - Scans for `.windsurf/`, `.cursor/`, or `.claude/` directories
 2. **GitHub CLI Check** - Ensures GitHub CLI is installed and authenticated
 3. **Backup Creation** - Saves existing rules before making changes
 4. **Rule Application** - Copies AIOS-specific rules to appropriate locations
 5. **Verification** - Confirms successful setup
 
 ### IDE Rule Locations
-- **Windsurf**: `.windsurf/rules`
 - **Cursor**: `.cursorules`
 - **Claude Code**: `.claude/CLAUDE.md`
 
@@ -58,7 +55,7 @@ npm run setup:environment
 
 ## Creating New Workflows
 
-Workflows can be defined in YAML or Markdown format with YAML frontmatter. See existing workflows for examples.
+Workflows are defined in YAML format. See existing workflows for examples.
 
 ### Workflow Structure
 ```yaml

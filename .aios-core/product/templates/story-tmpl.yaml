@@ -46,6 +46,42 @@ sections:
     owner: scrum-master
     editors: [scrum-master, dev-agent]
 
+  # Story 11.1: Dynamic Executor Assignment (Projeto Bob)
+  - id: executor-assignment
+    title: Executor Assignment
+    type: metadata
+    required: true
+    instruction: |
+      **REQUIRED FIELDS** - Automatically populated by PM during epic creation.
+
+      Uses dynamic executor assignment based on story type analysis.
+      See: PRD AIOS v2.0 "Projeto Bob" - Section 5
+
+      **Work Type → Executor Mapping:**
+      | Work Type | Executor | Quality Gate |
+      |-----------|----------|--------------|
+      | Code/Features/Logic | @dev | @architect |
+      | Schema/DB/RLS/Migrations | @data-engineer | @dev |
+      | Infra/CI/CD/Deploy | @devops | @architect |
+      | Design/UI Components | @ux-design-expert | @dev |
+      | Research/Investigation | @analyst | @pm |
+      | Architecture Decisions | @architect | @pm |
+
+      **VALIDATION RULES:**
+      - executor != quality_gate (ALWAYS)
+      - quality_gate_tools must not be empty
+    template: |
+      executor: "{{executor}}"
+      quality_gate: "{{quality_gate}}"
+      quality_gate_tools: {{quality_gate_tools}}
+    validation:
+      - rule: executor != quality_gate
+        error: "Executor cannot be the same as Quality Gate"
+      - rule: quality_gate_tools.length > 0
+        error: "Quality gate tools cannot be empty"
+    owner: pm
+    editors: [pm, scrum-master]
+
   - id: story
     title: Story
     type: template-text
@@ -57,7 +93,7 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
-
+    
   - id: acceptance-criteria
     title: Acceptance Criteria
     type: numbered-list
@@ -261,7 +297,7 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master, dev-agent]
-
+    
   - id: dev-notes
     title: Dev Notes
     instruction: |
@@ -285,7 +321,7 @@ sections:
         elicit: true
         owner: scrum-master
         editors: [scrum-master]
-
+        
   - id: change-log
     title: Change Log
     type: table
@@ -293,7 +329,7 @@ sections:
     instruction: Track changes made to this story document
     owner: scrum-master
     editors: [scrum-master, dev-agent, qa-agent]
-
+    
   - id: dev-agent-record
     title: Dev Agent Record
     instruction: This section is populated by the development agent during implementation
@@ -306,27 +342,27 @@ sections:
         instruction: Record the specific AI agent model and version used for development
         owner: dev-agent
         editors: [dev-agent]
-
+        
       - id: debug-log-references
         title: Debug Log References
         instruction: Reference any debug logs or traces generated during development
         owner: dev-agent
         editors: [dev-agent]
-
+        
       - id: completion-notes
         title: Completion Notes List
         instruction: Notes about the completion of tasks and any issues encountered
         owner: dev-agent
         editors: [dev-agent]
-
+        
       - id: file-list
         title: File List
         instruction: List all files created, modified, or affected during story implementation
         owner: dev-agent
         editors: [dev-agent]
-
+        
   - id: qa-results
     title: QA Results
     instruction: Results from QA Agent QA review of the completed story implementation
     owner: qa-agent
-    editors: [qa-agent]
+    editors: [qa-agent] 

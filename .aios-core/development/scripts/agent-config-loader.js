@@ -337,7 +337,7 @@ class AgentConfigLoader {
         const normalizedYaml = this._normalizeCompactCommands(yamlMatch[1]);
         try {
           agentDef = yaml.load(normalizedYaml);
-        } catch (secondError) {
+        } catch (_secondError) {
           throw new Error(`Failed to parse agent definition YAML for ${this.agentId}: ${parseError.message}`);
         }
       }
@@ -553,13 +553,12 @@ if (require.main === module) {
 
   (async () => {
     try {
-      // Load core config
-      const coreConfigPath = path.join(process.cwd(), '.aios-core', 'core-config.yaml');
-      const coreConfigContent = await fs.readFile(coreConfigPath, 'utf8');
-      const coreConfig = yaml.load(coreConfigContent);
+      // Load config via layered resolver (PRO-4: config hierarchy)
+      const { resolveConfig } = require('../../core/config/config-resolver');
+      const { config: coreConfig } = resolveConfig(process.cwd());
 
       switch (command) {
-        case 'load':
+        case 'load': {
           if (!agentId) {
             console.error('Usage: node agent-config-loader.js load <agent-id>');
             process.exit(1);
@@ -577,8 +576,9 @@ if (require.main === module) {
           console.log(`   Sections Loaded: ${result.sectionsLoaded.join(', ')}`);
           console.log(`   Files Loaded: ${Object.keys(result.files).length}`);
           break;
+        }
 
-        case 'preload':
+        case 'preload': {
           const agents = agentId ? [agentId] : [
             'aios-master', 'dev', 'qa', 'architect', 'po', 'pm', 'sm',
             'analyst', 'ux-expert', 'data-engineer', 'devops', 'db-sage', 'security',
@@ -586,8 +586,9 @@ if (require.main === module) {
 
           await preloadAgents(agents, coreConfig);
           break;
+        }
 
-        case 'test':
+        case 'test': {
           console.log('\n🧪 Testing agent config loader...\n');
 
           // Test loading for a few agents
@@ -606,6 +607,7 @@ if (require.main === module) {
 
           console.log('✅ All tests passed!\n');
           break;
+        }
 
         default:
           console.log(`

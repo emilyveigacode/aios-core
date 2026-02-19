@@ -88,6 +88,62 @@ atomic_layer: Organism
 
 ---
 
+## Constitutional Gates
+
+> **Reference:** Constitution Articles I, III
+> **Enforcement:** Automatic validation before execution
+
+### Gate 1: Story-Driven Development (Article III)
+
+```yaml
+constitutional_gate:
+  article: III
+  name: Story-Driven Development
+  severity: BLOCK
+
+  validation:
+    - Story file MUST exist at docs/stories/{storyId}/story.yaml
+    - Story MUST have status != "Draft" (Ready, In Progress, or Done)
+    - Story MUST have acceptance criteria defined
+    - Story MUST have at least one task/subtask
+
+  on_violation:
+    action: BLOCK
+    message: |
+      CONSTITUTIONAL VIOLATION: Article III - Story-Driven Development
+      Cannot develop without a valid story.
+
+      Issue: {violation_details}
+
+      Resolution: Create or update story via @sm *draft or @po *create-story
+```
+
+### Gate 2: CLI First (Article I)
+
+```yaml
+constitutional_gate:
+  article: I
+  name: CLI First
+  severity: WARN
+
+  validation:
+    - If story involves new functionality:
+      - CLI implementation SHOULD exist or be created first
+      - UI components SHOULD NOT be created before CLI is functional
+
+  on_violation:
+    action: WARN
+    message: |
+      CONSTITUTIONAL WARNING: Article I - CLI First
+      UI implementation detected without CLI foundation.
+
+      Reminder: CLI First → Observability Second → UI Third
+
+      Continue anyway? (This will be logged)
+```
+
+---
+
 ## Pre-Conditions
 
 **Purpose:** Validate prerequisites BEFORE task execution (blocking)
@@ -96,6 +152,13 @@ atomic_layer: Organism
 
 ```yaml
 pre-conditions:
+  - [ ] Constitutional gates passed (Article III: Story exists, Article I: CLI First check)
+    tipo: constitutional-gate
+    blocker: true
+    validação: |
+      Verify story exists and has valid structure
+    error_message: "Constitutional violation - see gate output above"
+
   - [ ] Task is registered; required parameters provided; dependencies met
     tipo: pre-condition
     blocker: true
@@ -415,12 +478,18 @@ const {
 ### Order of Execution
 
 1. Read (first or next) task
-2. Implement task and its subtasks
-3. Write tests
-4. Execute validations
-5. **Only if ALL pass**: Mark task checkbox [x]
-6. Update story File List (ensure all created/modified/deleted files listed)
-7. Repeat until all tasks complete
+2. **Code Intelligence Check (IDS G4)** — Before creating new files or functions:
+   - If code intelligence is available (`isCodeIntelAvailable()` from `.aios-core/core/code-intel`):
+     - Call `checkBeforeWriting(fileName, description)` from `.aios-core/core/code-intel/helpers/dev-helper`
+     - If result is not null, display as **"Code Intelligence Suggestion"** (non-blocking advisory)
+     - Log suggestion in decision-log if in YOLO mode
+   - If code intelligence is NOT available: skip silently (zero impact on workflow)
+3. Implement task and its subtasks
+4. Write tests
+5. Execute validations
+6. **Only if ALL pass**: Mark task checkbox [x]
+7. Update story File List (ensure all created/modified/deleted files listed)
+8. Repeat until all tasks complete
 
 ### Story File Updates (All Modes)
 
@@ -654,7 +723,8 @@ function handleCancellation() {
 
 ```javascript
 function validateStoryFile(storyId) {
-  const storyPath = `docs/stories/${storyId}.yaml`;
+  // Story files are in nested directories: docs/stories/{storyId}/story.yaml
+  const storyPath = `docs/stories/${storyId}/story.yaml`;
 
   if (!fs.existsSync(storyPath)) {
     console.error(`Error: Story file not found at ${storyPath}`);
@@ -790,7 +860,7 @@ git checkout abc123def456 -- <file-path>
 **Output**:
 ```
 💬 Interactive Mode - Balanced Development
-📋 Story 3.15: Expansion Pack Auto Configuration
+📋 Story 3.15: Squad Auto Configuration
 
 📖 Task 1: Design configuration schema
 ❓ Decision Point - Schema Format

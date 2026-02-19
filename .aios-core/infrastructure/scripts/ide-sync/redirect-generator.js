@@ -55,7 +55,7 @@ ${baseContent.instruction}
 `;
 
     case 'xml-tagged-markdown':
-      // Windsurf format
+      // Generic markdown format
       return `${baseContent.header}
 
 <redirect>
@@ -68,28 +68,6 @@ Status: Deprecated
 ${baseContent.notice}
 ${baseContent.instruction}
 </notice>
-
----
-*AIOS Redirect - Synced automatically*
-`;
-
-    case 'project-rules':
-      // Trae format
-      return `${baseContent.header}
-
-## Redirect Notice
-
-${baseContent.notice}
-
-## Action Required
-
-${baseContent.instruction}
-
-## Mapping
-
-| Old Agent | New Agent |
-|-----------|-----------|
-| @${oldId} | @${newId} |
 
 ---
 *AIOS Redirect - Synced automatically*

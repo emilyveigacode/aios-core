@@ -321,13 +321,11 @@ O AIOS suporta múltiplas IDEs. A configuração é sincronizada entre:
 
 - Claude Code (`.claude/`)
 - Cursor (`.cursor/`)
-- Windsurf (`.windsurf/`)
-- Cline (`.cline/`)
 - VS Code (`.vscode/`)
 
 ```bash
 # Sincronizar agentes para sua IDE
-npm run sync:agents
+npm run sync:ide
 ```
 
 ---
@@ -386,9 +384,9 @@ aios rebuild
 ### Tópicos Avançados
 
 - [Guia de Quality Gates](./quality-gates.md)
-- [Estratégia Multi-Repo](../architecture/multi-repo-strategy.md)
+- [Estratégia Multi-Repo](../../architecture/multi-repo-strategy.md)
 - [Integração MCP](./mcp-global-setup.md)
-- [Integração com IDE](../ide-integration.md)
+- [Integração com IDE](../../ide-integration.md)
 
 ---
 
@@ -451,4 +449,4 @@ aios squads search {keyword}
 
 ---
 
-_Guia do Usuário Synkra AIOS v2.1.0_
+_Guia do Usuário Synkra AIOS v4.0_

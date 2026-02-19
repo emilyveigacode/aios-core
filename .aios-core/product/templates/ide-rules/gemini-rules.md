@@ -1,85 +1,87 @@
-# Synkra AIOS Development Rules for Gemini CLI
+# Gemini Rules - Synkra AIOS
 
-You are working with Synkra AIOS, an AI-Orchestrated System for Full Stack Development.
+Este arquivo define as instrucoes do projeto para Gemini CLI neste repositorio.
 
-## Core Framework Understanding
+<!-- AIOS-MANAGED-START: core -->
+## Core Rules
 
-Synkra AIOS is a meta-framework that orchestrates AI agents to handle complex development workflows. Always recognize and work within this architecture.
+1. Siga a Constitution em `.aios-core/constitution.md`
+2. Priorize `CLI First -> Observability Second -> UI Third`
+3. Trabalhe por stories em `docs/stories/`
+4. Nao invente requisitos fora dos artefatos existentes
+<!-- AIOS-MANAGED-END: core -->
 
-## Agent System
+<!-- AIOS-MANAGED-START: quality -->
+## Quality Gates
 
-### Agent Activation
-- Mention the agent persona in your prompt: "As the dev agent..." or "Acting as @dev..."
-- Available agents: dev, qa, architect, pm, po, sm, analyst
-- Agent commands use the * prefix: *help, *create-story, *task, *exit
+- Rode `npm run lint`
+- Rode `npm run typecheck`
+- Rode `npm test`
+- Atualize checklist e file list da story antes de concluir
+<!-- AIOS-MANAGED-END: quality -->
 
-### Agent Context
-When referencing an agent:
-- Follow that agent's specific persona and expertise
-- Use the agent's designated workflow patterns
-- Maintain the agent's perspective throughout the interaction
+<!-- AIOS-MANAGED-START: codebase -->
+## Project Map
 
-## Development Methodology
+- Core framework: `.aios-core/`
+- CLI entrypoints: `bin/`
+- Shared packages: `packages/`
+- Tests: `tests/`
+- Docs: `docs/`
+<!-- AIOS-MANAGED-END: codebase -->
 
-### Story-Driven Development
-1. **Work from stories** - All development starts with a story in `docs/stories/`
-2. **Update progress** - Mark checkboxes as tasks complete: [ ] → [x]
-3. **Track changes** - Maintain the File List section in the story
-4. **Follow criteria** - Implement exactly what the acceptance criteria specify
+<!-- AIOS-MANAGED-START: gemini-integration -->
+## Gemini Integration
 
-### Code Standards
-- Write clean, self-documenting code
-- Follow existing patterns in the codebase
-- Include comprehensive error handling
-- Add unit tests for all new functionality
-- Use TypeScript/JavaScript best practices
+Fonte de verdade de agentes:
+- Canonico: `.aios-core/development/agents/*.md`
+- Espelhado para Gemini: `.gemini/rules/AIOS/agents/*.md`
 
-### Testing Requirements
-- Run all tests before marking tasks complete
-- Ensure linting passes: `npm run lint`
-- Verify type checking: `npm run typecheck`
-- Add tests for new features
-- Test edge cases and error scenarios
+Hooks e settings:
+- Hooks locais: `.gemini/hooks/`
+- Settings locais: `.gemini/settings.json`
 
-## AIOS Framework Structure
+Sempre que houver drift, execute:
+- `npm run sync:ide:gemini`
+- `npm run validate:gemini-sync`
+- `npm run validate:gemini-integration`
+<!-- AIOS-MANAGED-END: gemini-integration -->
 
-```
-aios-core/
-├── agents/         # Agent persona definitions (YAML/Markdown)
-├── tasks/          # Executable task workflows
-├── workflows/      # Multi-step workflow definitions
-├── templates/      # Document and code templates
-├── checklists/     # Validation and review checklists
-└── rules/          # Framework rules and patterns
+<!-- AIOS-MANAGED-START: parity -->
+## Multi-IDE Parity
 
-docs/
-├── stories/        # Development stories (numbered)
-├── prd/            # Product requirement documents
-├── architecture/   # System architecture documentation
-└── guides/         # User and developer guides
-```
+Para garantir paridade entre Claude Code, Codex e Gemini:
+- `npm run validate:parity`
+- `npm run validate:paths`
+<!-- AIOS-MANAGED-END: parity -->
 
-## Gemini CLI-Specific Configuration
+<!-- AIOS-MANAGED-START: activation -->
+## Agent Activation
 
-### Rules Location
-- Rules are stored in `.gemini/rules.md`
-- Include agent context in your prompts
+Preferencia de ativacao:
+1. Use agentes em `.gemini/rules/AIOS/agents/`
+2. Se necessario, use fonte canonica em `.aios-core/development/agents/`
 
-### Usage Pattern
-```bash
-# Example: Activate dev agent context
-gemini "As the AIOS dev agent, help me implement the user authentication feature from docs/stories/auth-story.md"
-```
+Ao ativar agente:
+- carregar definicao completa do agente
+- renderizar greeting via `node .aios-core/development/scripts/generate-greeting.js <agent-id>`
+- manter persona ativa ate `*exit`
 
-### Performance Tips
-- Include relevant file context in prompts
-- Use clear, specific requests
-- Reference story files for context
+Atalhos recomendados no Gemini:
+- `/aios-menu` para listar agentes
+- `/aios-<agent-id>` (ex.: `/aios-dev`, `/aios-architect`)
+- `/aios-agent <agent-id>` para launcher generico
+<!-- AIOS-MANAGED-END: activation -->
 
-### Integration
-- Gemini CLI can execute shell commands
-- Use for code generation and analysis
-- Leverage multimodal capabilities for diagrams
+<!-- AIOS-MANAGED-START: commands -->
+## Common Commands
 
----
-*Synkra AIOS Gemini CLI Configuration v2.1*
+- `npm run sync:ide`
+- `npm run sync:ide:check`
+- `npm run sync:ide:gemini`
+- `npm run validate:gemini-sync`
+- `npm run validate:gemini-integration`
+- `npm run validate:parity`
+- `npm run validate:structure`
+- `npm run validate:agents`
+<!-- AIOS-MANAGED-END: commands -->

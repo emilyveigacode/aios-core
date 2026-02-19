@@ -74,7 +74,9 @@ class Layer2PRAutomation extends BaseLayer {
     if (verbose) {
       const summary = this.getSummary();
       const icon = summary.pass ? '✅' : '⚠️';
-      console.log(`\n${icon} Layer 2 ${summary.pass ? 'PASSED' : 'HAS ISSUES'} (${this.formatDuration(summary.duration)})`);
+      console.log(
+        `\n${icon} Layer 2 ${summary.pass ? 'PASSED' : 'HAS ISSUES'} (${this.formatDuration(summary.duration)})`,
+      );
     }
 
     return this.getSummary();
@@ -95,8 +97,9 @@ class Layer2PRAutomation extends BaseLayer {
 
     try {
       // Check if CodeRabbit is available
-      const command = this.coderabbit.command ||
-        "wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t uncommitted'";
+      const command =
+        this.coderabbit.command ||
+        "wsl bash -c 'cd ${PROJECT_ROOT} && ~/.local/bin/coderabbit --prompt-only -t uncommitted'";
 
       const result = await this.runCommand(command, timeout);
 
@@ -133,7 +136,9 @@ class Layer2PRAutomation extends BaseLayer {
 
       if (verbose) {
         const icon = pass ? '✓' : '⚠️';
-        console.log(`  ${icon} CodeRabbit: ${criticalCount} CRITICAL, ${highCount} HIGH, ${mediumCount} MEDIUM`);
+        console.log(
+          `  ${icon} CodeRabbit: ${criticalCount} CRITICAL, ${highCount} HIGH, ${mediumCount} MEDIUM`,
+        );
       }
 
       return coderabbitResult;
@@ -226,7 +231,9 @@ class Layer2PRAutomation extends BaseLayer {
 
       if (verbose) {
         const icon = pass ? '✓' : '⚠️';
-        console.log(`  ${icon} Quinn: ${suggestions.length} suggestions, ${blockingSuggestions.length} blocking`);
+        console.log(
+          `  ${icon} Quinn: ${suggestions.length} suggestions, ${blockingSuggestions.length} blocking`,
+        );
       }
 
       return quinnResult;
@@ -246,7 +253,7 @@ class Layer2PRAutomation extends BaseLayer {
    * @param {Object} context - Execution context
    * @returns {Promise<Array>} Suggestions
    */
-  async generateQuinnSuggestions(context = {}) {
+  async generateQuinnSuggestions(_context = {}) {
     // This would integrate with the QA agent for automated review
     // For now, return empty suggestions - full integration in Story 2.11
     return [];

@@ -12,7 +12,79 @@
 
 Framework de Desenvolvimento Auto-Modificável Alimentado por IA. Fundado em Desenvolvimento Ágil Dirigido por Agentes, oferecendo capacidades revolucionárias para desenvolvimento dirigido por IA e muito mais. Transforme qualquer domínio com expertise especializada de IA: desenvolvimento de software, entretenimento, escrita criativa, estratégia de negócios, bem-estar pessoal e muito mais.
 
+## Comece Aqui (10 Min)
+
+Se é sua primeira vez no AIOS, siga este caminho linear:
+
+1. Instale em um projeto novo ou existente:
+```bash
+# novo projeto
+npx aios-core init meu-projeto
+
+# projeto existente
+cd seu-projeto
+npx aios-core install
+```
+2. Escolha sua IDE/CLI e o caminho de ativação:
+- Claude Code: `/agent-name`
+- Gemini CLI: `/aios-menu` → `/aios-<agent>`
+- Codex CLI: `/skills` → `aios-<agent-id>`
+- Cursor/Copilot/AntiGravity: siga os limites e workarounds em `docs/ide-integration.md`
+3. Ative 1 agente e confirme o greeting.
+4. Rode 1 comando inicial (`*help` ou equivalente) para validar first-value.
+
+Definição de first-value (binária): ativação de agente + greeting válido + comando inicial com output útil em <= 10 minutos.
+
+
+## Compatibilidade de Hooks por IDE (Realidade AIOS 4.2)
+
+Muitos recursos avançados do AIOS dependem de eventos de ciclo de vida (hooks). A tabela abaixo mostra a paridade real entre IDEs/plataformas:
+
+| IDE/CLI | Paridade de Hooks vs Claude | Impacto Prático |
+| --- | --- | --- |
+| Claude Code | Completa (referência) | Automação máxima de contexto, guardrails e auditoria |
+| Gemini CLI | Alta (eventos nativos) | Cobertura forte de automações pre/post tool e sessão |
+| Codex CLI | Parcial/limitada | Parte das automações depende de `AGENTS.md`, `/skills`, MCP e fluxo operacional |
+| Cursor | Sem lifecycle hooks equivalentes | Menor automação de pre/post tool; foco em regras, MCP e fluxo do agente |
+| GitHub Copilot | Sem lifecycle hooks equivalentes | Menor automação de sessão/tooling; foco em instruções de repositório + MCP no VS Code |
+| AntiGravity | Workflow-based (não hook-based) | Integração por workflows, não por eventos de hook equivalentes ao Claude |
+
+Impactos e mitigação detalhados: `docs/ide-integration.md`.
+
+## Acknowledgments & Attribution
+
+Synkra AIOS was originally derived from the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD), created by [Brian Madison](https://github.com/bmadcode) (BMad Code, LLC). We gratefully acknowledge the BMad Method for providing the foundation from which this project began.
+
+**Important:** This project is **NOT affiliated with, endorsed by, or sanctioned by** the BMad Method or BMad Code, LLC. Contributors appearing in the git history from the original BMad Method repository do not imply active participation in or endorsement of Synkra AIOS.
+
+Since its origin, AIOS has evolved significantly with its own architecture, terminology, and features (v4.x+), and does not depend on BMad for current operation. The BMad Method remains an excellent framework in its own right — please visit the [official BMad Method repository](https://github.com/bmad-code-org/BMAD-METHOD) to learn more.
+
+BMad, BMad Method, and BMad Core are trademarks of BMad Code, LLC. See [TRADEMARK.md](https://github.com/bmad-code-org/BMAD-METHOD/blob/main/TRADEMARK.md) for usage guidelines.
+
 ## Visão Geral
+
+### Premissa Arquitetural: CLI First
+
+O Synkra AIOS segue uma hierarquia clara de prioridades:
+
+```
+CLI First → Observability Second → UI Third
+```
+
+| Camada            | Prioridade | Foco                                                                          | Exemplos                                     |
+| ----------------- | ---------- | ----------------------------------------------------------------------------- | -------------------------------------------- |
+| **CLI**           | Máxima     | Onde a inteligência vive. Toda execução, decisões e automação acontecem aqui. | Agentes (`@dev`, `@qa`), workflows, comandos |
+| **Observability** | Secundária | Observar e monitorar o que acontece no CLI em tempo real.                     | Dashboard SSE, logs, métricas, timeline      |
+| **UI**            | Terciária  | Gestão pontual e visualizações quando necessário.                             | Kanban, settings, story management           |
+
+**Princípios derivados:**
+
+- A CLI é a fonte da verdade - dashboards apenas observam
+- Funcionalidades novas devem funcionar 100% via CLI antes de ter UI
+- A UI nunca deve ser requisito para operação do sistema
+- Observabilidade serve para entender o que o CLI está fazendo, não para controlá-lo
+
+---
 
 **As Duas Inovações Chave do Synkra AIOS:**
 
@@ -22,7 +94,7 @@ Framework de Desenvolvimento Auto-Modificável Alimentado por IA. Fundado em Des
 
 Esta abordagem de duas fases elimina tanto a **inconsistência de planejamento** quanto a **perda de contexto** - os maiores problemas no desenvolvimento assistido por IA. Seu agente dev abre um arquivo de história com compreensão completa do que construir, como construir e por quê.
 
-**📖 [Veja o fluxo de trabalho completo no Guia do Usuário](aios-core/user-guide.md)** - Fase de planejamento, ciclo de desenvolvimento e todos os papéis dos agentes
+**📖 [Veja o fluxo de trabalho completo no Guia do Usuário](docs/guides/user-guide.md)** - Fase de planejamento, ciclo de desenvolvimento e todos os papéis dos agentes
 
 ## Pré-requisitos
 
@@ -35,8 +107,10 @@ Esta abordagem de duas fases elimina tanto a **inconsistência de planejamento**
 **Guias específicos por plataforma:**
 
 - 📖 [Guia de Instalação para macOS](docs/installation/macos.md)
-- 📖 Guia de Instalação para Windows (suporte integrado)
-- 📖 Guia de Instalação para Linux (suporte integrado)
+- 📖 [Guia de Instalação para Windows](docs/installation/windows.md)
+- 📖 [Guia de Instalação para Linux](docs/installation/linux.md)
+
+**Documentação multilíngue disponível:** [Português](docs/pt/installation/) | [Español](docs/es/installation/)
 
 ## Navegação Rápida
 
@@ -44,28 +118,28 @@ Esta abordagem de duas fases elimina tanto a **inconsistência de planejamento**
 
 **Antes de mergulhar, revise estes diagramas críticos de fluxo de trabalho que explicam como o AIOS funciona:**
 
-1. **[Fluxo de Planejamento (Interface Web)](aios-core/user-guide.md#the-planning-workflow-web-ui)** - Como criar documentos de PRD e Arquitetura
-2. **[Ciclo Principal de Desenvolvimento (IDE)](aios-core/user-guide.md#the-core-development-cycle-ide)** - Como os agentes sm, dev e qa colaboram através de arquivos de histórias
+1. **[Fluxo de Planejamento (Interface Web)](docs/guides/user-guide.md#the-planning-workflow-web-ui)** - Como criar documentos de PRD e Arquitetura
+2. **[Ciclo Principal de Desenvolvimento (IDE)](docs/guides/user-guide.md#the-core-development-cycle-ide)** - Como os agentes sm, dev e qa colaboram através de arquivos de histórias
 
 > ⚠️ **Estes diagramas explicam 90% da confusão sobre o fluxo Synkra AIOS Agentic Agile** - Entender a criação de PRD+Arquitetura e o fluxo de trabalho sm/dev/qa e como os agentes passam notas através de arquivos de histórias é essencial - e também explica por que isto NÃO é taskmaster ou apenas um simples executor de tarefas!
 
 ### O que você gostaria de fazer?
 
 - **[Instalar e Construir software com Equipe Ágil Full Stack de IA](#início-rápido)** → Instruções de Início Rápido
-- **[Aprender como usar o AIOS](aios-core/user-guide.md)** → Guia completo do usuário e passo a passo
+- **[Aprender como usar o AIOS](docs/guides/user-guide.md)** → Guia completo do usuário e passo a passo
 - **[Ver agentes IA disponíveis](#agentes-disponíveis)** → Papéis especializados para sua equipe
 - **[Explorar usos não técnicos](#-além-do-desenvolvimento-de-software---squads)** → Escrita criativa, negócios, bem-estar, educação
-- **[Criar meus próprios agentes IA](#criando-seu-próprio-expansion-pack)** → Construir agentes para seu domínio
-- **[Navegar Squads prontos](squads/)** → Game dev, DevOps, infraestrutura e inspire-se com ideias e exemplos
-- **[Entender a arquitetura](docs/core-architecture.md)** → Mergulho técnico profundo
-- **[Juntar-se à comunidade](https://discord.gg/gk8jAdXWmj)** → Obter ajuda e compartilhar ideias
+- **[Criar meus próprios agentes IA](#criando-seu-próprio-squad)** → Construir agentes para seu domínio
+- **[Navegar Squads prontos](docs/guides/squads-overview.md)** → Veja como criar e usar equipes de agentes IA
+- **[Entender a arquitetura](docs/architecture/ARCHITECTURE-INDEX.md)** → Mergulho técnico profundo
+- **[Reportar problemas](https://github.com/SynkraAI/aios-core/issues)** → Bug reports e feature requests
 
 ## Importante: Mantenha Sua Instalação AIOS Atualizada
 
 **Mantenha-se atualizado sem esforço!** Para atualizar sua instalação AIOS existente:
 
 ```bash
-npx github:SynkraAI/aios-core install
+npx aios-core@latest install
 ```
 
 Isto vai:
@@ -114,7 +188,7 @@ O Synkra AIOS agora inclui uma experiência de instalação interativa de últim
 
 - ✅ Download da versão mais recente do NPM
 - ✅ Assistente de instalação interativo moderno
-- ✅ Configuração automática do IDE (Windsurf, Cursor ou Claude Code)
+- ✅ Configuração automática do IDE (Codex CLI, Cursor ou Claude Code)
 - ✅ Configuração de todos os agentes e fluxos de trabalho AIOS
 - ✅ Criação dos arquivos de configuração necessários
 - ✅ Inicialização do sistema de meta-agentes
@@ -130,7 +204,7 @@ O Synkra AIOS agora inclui uma experiência de instalação interativa de últim
 Se você já tem o AIOS instalado:
 
 ```bash
-npx github:SynkraAI/aios-core install
+npx aios-core@latest install
 # O instalador detectará sua instalação existente e a atualizará
 ```
 
@@ -138,16 +212,37 @@ npx github:SynkraAI/aios-core install
 
 O Synkra AIOS inclui regras pré-configuradas para IDE para melhorar sua experiência de desenvolvimento:
 
-#### Para Windsurf ou Cursor:
+#### Para Cursor:
 
-1. Abra as configurações do seu IDE
-2. Navegue até **Global Rules** (Windsurf) ou **User Rules** (Cursor)
-3. Copie o conteúdo de `.windsurf/global-rules.md` ou `.cursor/global-rules.md`
+1. Abra as configurações do Cursor
+2. Navegue até **User Rules**
+3. Copie o conteúdo de `.cursor/global-rules.md`
 4. Cole na seção de regras e salve
 
 #### Para Claude Code:
 
 - ✅ Já configurado! O arquivo `.claude/CLAUDE.md` é carregado automaticamente
+- Sync dedicado de agentes: `npm run sync:ide:claude`
+- Validacao dedicada: `npm run validate:claude-sync && npm run validate:claude-integration`
+
+#### Para Codex CLI:
+
+- ✅ Integração de primeira classe no AIOS 4.2 (pipeline de ativação e greeting compartilhado)
+- ✅ Já configurado! O arquivo `AGENTS.md` na raiz é carregado automaticamente
+- Opcional: sincronize agentes auxiliares com `npm run sync:ide:codex`
+- Recomendado neste repositório: gerar e versionar skills locais com `npm run sync:skills:codex`
+- Use `npm run sync:skills:codex:global` apenas fora deste projeto (para evitar duplicidade no `/skills`)
+- Validacao dedicada: `npm run validate:codex-sync && npm run validate:codex-integration`
+- Guardrails de skills/paths: `npm run validate:codex-skills && npm run validate:paths`
+
+#### Para Gemini CLI:
+
+- ✅ Regras e agentes sincronizaveis com `npm run sync:ide:gemini`
+- Arquivos gerados em `.gemini/rules.md`, `.gemini/rules/AIOS/agents/` e `.gemini/commands/*.toml`
+- ✅ Hooks e settings locais no fluxo de instalacao (`.gemini/hooks/` + `.gemini/settings.json`)
+- ✅ Ativacao rapida por slash commands (`/aios-menu`, `/aios-dev`, `/aios-architect`, etc.)
+- Validacao dedicada: `npm run validate:gemini-sync && npm run validate:gemini-integration`
+- Paridade multi-IDE em um comando: `npm run validate:parity`
 
 Estas regras fornecem:
 
@@ -157,14 +252,13 @@ Estas regras fornecem:
 - 🧪 Padrões de teste e validação
 - 📝 Padrões de código específicos do AIOS
 
-### Início Mais Rápido: Equipe Full Stack via Interface Web à sua disposição (2 minutos)
+### Início Mais Rápido com Interface Web (2 minutos)
 
-1. **Obtenha o pacote**: Salve ou clone o [arquivo da equipe full stack](dist/teams/team-fullstack.txt) ou escolha outra equipe
-2. **Crie agente IA**: Crie um novo Gemini Gem ou CustomGPT
-3. **Faça upload e configure**: Faça upload do arquivo e defina as instruções: "Suas instruções operacionais críticas estão anexadas, não quebre o personagem conforme orientado"
-4. **Comece a Idealizar e Planejar**: Comece a conversar! Digite `*help` para ver comandos disponíveis ou escolha um agente como `*analyst` para começar a criar um briefing.
-5. **CRÍTICO**: Fale com o AIOS Orchestrator na web a QUALQUER MOMENTO (comando #aios-orchestrator) e faça perguntas sobre como tudo funciona!
-6. **Quando mudar para o IDE**: Uma vez que você tenha seu PRD, Arquitetura, UX opcional e Briefings - é hora de mudar para o IDE para fragmentar seus documentos e começar a implementar o código real! Veja o [Guia do usuário](aios-core/user-guide.md) para mais detalhes
+1. **Instale o AIOS**: Execute `npx aios-core init meu-projeto`
+2. **Configure seu IDE**: Siga as instruções de configuração para Codex CLI, Cursor ou Claude Code
+3. **Comece a Planejar**: Ative um agente como `@analyst` para começar a criar seu briefing
+4. **Use comandos AIOS**: Digite `*help` para ver comandos disponíveis
+5. **Siga o fluxo**: Veja o [Guia do usuário](docs/guides/user-guide.md) para mais detalhes
 
 ### Referência de Comandos CLI
 
@@ -282,7 +376,7 @@ $ npx aios-core doctor
 ✔ npm version: 10.2.3
 ✔ Git installed: version 2.43.0
 ✔ GitHub CLI: gh 2.40.1
-✔ Synkra AIOS: v1.0.0
+✔ Synkra AIOS: v4.2.11
 
 Configuration:
 ✔ .aios-core/ directory exists
@@ -344,18 +438,18 @@ npm run install:aios
 Para membros da equipe ingressando no projeto:
 
 ```bash
-# Instalar AIOS com configuração GitHub
-npx github:SynkraAI/aios-core setup
+# Instalar AIOS no projeto
+npx aios-core@latest install
 
 # Isto vai:
-# 1. Verificar/instalar GitHub CLI
-# 2. Autenticar com GitHub
-# 3. Executar o instalador AIOS
+# 1. Detectar instalação existente (se houver)
+# 2. Instalar/atualizar framework AIOS
+# 3. Configurar agentes e workflows
 ```
 
 ## 🌟 Além do Desenvolvimento de Software - Squads
 
-O framework de linguagem natural do AIOS funciona em QUALQUER domínio. Os Squads fornecem agentes IA especializados para escrita criativa, estratégia de negócios, saúde e bem-estar, educação e muito mais. Além disso, os Squads podem expandir o núcleo do Synkra AIOS com funcionalidade específica que não é genérica para todos os casos. [Veja o Guia de Squads](docs/squads.md) e aprenda a criar os seus próprios!
+O framework de linguagem natural do AIOS funciona em QUALQUER domínio. Os Squads fornecem agentes IA especializados para escrita criativa, estratégia de negócios, saúde e bem-estar, educação e muito mais. Além disso, os Squads podem expandir o núcleo do Synkra AIOS com funcionalidade específica que não é genérica para todos os casos. [Veja o Guia de Squads](docs/guides/squads-guide.md) e aprenda a criar os seus próprios!
 
 ## Agentes Disponíveis
 
@@ -384,9 +478,9 @@ O Synkra AIOS vem com 11 agentes especializados:
 
 ### Guias Essenciais
 
-- 📖 **[Guia do Usuário](aios-core/user-guide.md)** - Passo a passo completo desde a concepção até a conclusão do projeto
-- 🏗️ **[Arquitetura Principal](docs/architecture.md)** - Mergulho técnico profundo e design do sistema
-- 🚀 **[Guia de Squads](docs/squads.md)** - Estenda o AIOS para qualquer domínio além do desenvolvimento de software
+- 📖 **[Guia do Usuário](docs/guides/user-guide.md)** - Passo a passo completo desde a concepção até a conclusão do projeto
+- 🏗️ **[Arquitetura Principal](docs/architecture/ARCHITECTURE-INDEX.md)** - Mergulho técnico profundo e design do sistema
+- 🚀 **[Guia de Squads](docs/guides/squads-guide.md)** - Estenda o AIOS para qualquer domínio além do desenvolvimento de software
 
 ### Documentação Adicional
 
@@ -394,205 +488,15 @@ O Synkra AIOS vem com 11 agentes especializados:
 - 📋 **[Primeiros Passos](docs/getting-started.md)** - Tutorial passo a passo para iniciantes
 - 🔧 **[Solução de Problemas](docs/troubleshooting.md)** - Soluções para problemas comuns
 - 🎯 **[Princípios Orientadores](docs/GUIDING-PRINCIPLES.md)** - Filosofia e melhores práticas do AIOS
-- 🏛️ **[Visão Geral da Arquitetura](docs/architecture-overview.md)** - Visão detalhada da arquitetura do sistema
+- 🏛️ **[Visão Geral da Arquitetura](docs/architecture/ARCHITECTURE-INDEX.md)** - Visão detalhada da arquitetura do sistema
 - ⚙️ **[Guia de Ajuste de Performance](docs/performance-tuning-guide.md)** - Otimize seu fluxo de trabalho AIOS
 - 🔒 **[Melhores Práticas de Segurança](docs/security-best-practices.md)** - Segurança e proteção de dados
-- 🔄 **[Guia de Migração v4.31→v1.0](docs/migration-v4.31-to-v1.0.md)** - Migração para versão cross-platform moderna
-- 🔄 **[Guia de Migração (Legacy)](docs/migration-guide.md)** - Migração de versões anteriores
+- 🔄 **[Guia de Migração](docs/migration-guide.md)** - Migração de versões anteriores
 - 📦 **[Versionamento e Releases](docs/versioning-and-releases.md)** - Política de versões
-- 🌳 **[Trabalhando no Brownfield](aios-core/working-in-the-brownfield.md)** - Integrar AIOS em projetos existentes
-
-## 📊 Architecture Mapping & Visualization System
-
-O Synkra AIOS v1.0.0 inclui um sistema completo de mapeamento e visualização de arquitetura construído nos Epics 2 & 3. Este sistema oferece **visibilidade total** da sua arquitetura através de múltiplos formatos e detecção automática de gaps.
-
-### 🎯 O Que é o Sistema de Mapeamento?
-
-Um **grafo de relacionamentos completo** de todos os componentes do framework:
-
-- 📦 **199 entidades mapeadas** (22 agents, 67 tasks, 27 templates, 9 checklists, 12 tools, 6 workflows, 54 utils, 2 data)
-- 🔗 **50 relacionamentos rastreados** (executes, uses_template, depends_on, imports, etc.)
-- 🔍 **7 categorias de gaps** detectadas automaticamente
-- 📈 **Auditoria trimestral** automatizada para prevenir regressões
-
-### 🗂️ Formatos Disponíveis
-
-O sistema exporta a arquitetura em **3 formatos complementares**:
-
-#### 1. 🔵 **Neo4j Graph Database**
-
-Explore a arquitetura interativamente com Neo4j:
-
-```bash
-# Localização: outputs/architecture-map/neo4j/
-cd outputs/architecture-map/neo4j/
-
-# Siga o guia de setup (Neo4j Desktop ou Docker)
-cat SETUP-GUIDE.md
-
-# Import rápido (após instalar Neo4j)
-neo4j-admin database import full \
-  --nodes=nodes.csv \
-  --relationships=relationships.csv \
-  --delimiter=',' \
-  architecture-db
-```
-
-**Queries Prontos:**
-
-- 🔍 Encontrar dependências de um componente
-- 🧩 Analisar cadeias de relacionamentos
-- 📊 Estatísticas de conectividade
-- ⚠️ Identificar componentes isolados
-
-Veja `sample-queries-annotated.cypher` para 13 queries prontos!
-
-#### 2. 📐 **Mermaid Diagrams**
-
-8 diagramas Mermaid prontos para documentação:
-
-```bash
-# Localização: outputs/architecture-map/mermaid/
-
-synthesis-full-architecture.mmd       # Arquitetura completa
-synthesis-layered-view.mmd           # Visão em camadas (agents → tasks → utils)
-synthesis-critical-paths.mmd         # Caminhos críticos
-synthesis-gap-visualization.mmd      # Gaps visualizados
-synthesis-module-view.mmd            # Visão modular
-gap-focus.mmd                        # Foco em gaps
-dependency-chains.mmd                # Cadeias de dependência
-ide-coverage.mmd                     # Cobertura IDE
-```
-
-**Renderize no GitHub, VSCode ou use Mermaid Live Editor!**
-
-#### 3. 🌐 **HTML Interactive Dashboard**
-
-Dashboard interativo (Vis.js) - funciona offline:
-
-```bash
-# Localização: outputs/architecture-map/visualization/
-open outputs/architecture-map/visualization/index.html
-```
-
-**Recursos do Dashboard:**
-
-- 🔍 Busca e filtros por tipo de entidade
-- 🎨 Visualização interativa do grafo (zoom, pan, drag)
-- 📊 Painel de detalhes de entidades
-- 🔗 Navegação por relacionamentos
-- 📈 Estatísticas em tempo real
-
-### 🛡️ Gap Detection System
-
-Sistema automatizado de detecção de gaps em **7 categorias**:
-
-| Categoria            | Descrição                                     | Status    |
-| -------------------- | --------------------------------------------- | --------- |
-| Broken References    | Referências a entidades inexistentes          | 17 gaps   |
-| Orphaned Active      | Entidades ativas sem uso                      | 0 gaps ✅ |
-| Ambiguous Relations  | Relacionamentos ambíguos                      | 5 gaps    |
-| Missing Docs         | Documentação faltante                         | 150 gaps  |
-| Deprecated Active    | Componentes deprecated ainda em uso           | 0 gaps ✅ |
-| Incomplete Workflows | Workflows incompletos                         | 8 gaps    |
-| Tool Validation      | Ferramentas referenciadas mas não registradas | 12 gaps   |
-
-**Total: 338 gaps rastreados** (88 Orphaned Active resolvidos no Epic 3.1!)
-
-### 🔄 Automated Validation
-
-**Validação contínua** em múltiplos pontos:
-
-1. **Pre-Commit Hook** (Story 3.22)
-   - Valida relacionamentos antes de cada commit
-   - Detecta referências quebradas
-   - Previne regressões
-
-2. **Gap Detection Script**
-
-   ```bash
-   node outputs/architecture-map/schemas/detect-gaps.js
-   ```
-
-3. **Quarterly Audit** (Story 3.25)
-   - Auditoria trimestral automatizada
-   - Report de tendências (`gap-trend.json`)
-   - Alertas para novos gaps
-
-4. **Tool Reference Validation** (Story 3.21)
-
-   ```bash
-   node outputs/architecture-map/schemas/validate-tool-references.js
-   ```
-
-   - Valida ferramentas MCP/CLI/Local
-   - Integração com Docker MCP Toolkit
-
-### 📈 Epic 2 & 3 Achievements
-
-**Epic 2 - Architecture Mapping (100% Complete):**
-
-- ✅ 297 entidades catalogadas
-- ✅ 174 relacionamentos sintetizados
-- ✅ Neo4j/Mermaid/HTML exports prontos
-- ✅ Gap detection implementado
-- ✅ Visualização interativa funcional
-
-**Epic 3 - Gap Remediation (62% Complete):**
-
-- ✅ **88 Orphaned Active gaps resolvidos** (Stories 3.1.1-3.1.4)
-- ✅ 54 utilities ativas documentadas em `core-config.yaml`
-- ✅ 19 utilities arquivadas com rationale
-- ✅ **85% token reduction** via Docker MCP Toolkit (280k → 40k tokens)
-- ✅ MCP governance consolidated under DevOps Agent (Story 6.14)
-- ✅ Pre-commit hooks + Quarterly audit
-
-### 🚀 Quick Start
-
-**1. Explore o Sistema:**
-
-```bash
-# Ver entidades e relacionamentos
-cat outputs/architecture-map/MASTER-RELATIONSHIP-MAP.json | jq '.metadata'
-
-# Detectar gaps
-node outputs/architecture-map/schemas/detect-gaps.js
-
-# Abrir dashboard
-open outputs/architecture-map/visualization/index.html
-```
-
-**2. Importe no Neo4j** (opcional):
-
-```bash
-cd outputs/architecture-map/neo4j/
-cat SETUP-GUIDE.md  # Siga as instruções
-```
-
-**3. Use Diagramas Mermaid:**
-
-```bash
-# Copie qualquer .mmd para sua documentação
-cp outputs/architecture-map/mermaid/synthesis-layered-view.mmd docs/
-```
-
-### 📚 Documentação Adicional
-
-- 📖 **[Neo4j Setup Guide](outputs/architecture-map/neo4j/SETUP-GUIDE.md)** - Importação completa
-- 📖 **[Visualization Guide](outputs/architecture-map/VISUALIZATION-GUIDE.md)** - Como usar o dashboard
-- 📖 **[Gap Detection Guide](outputs/architecture-map/schemas/README.md)** - Validação automatizada
-- 📖 **[Story 2.11](docs/stories/2.11-synthesis-integration.yaml)** - Synthesis implementation
-- 📖 **[Story 2.12](docs/stories/2.12-visualization-reporting.yaml)** - Visualization implementation
-
-### 🎯 Roadmap v1.1
-
-- [ ] Interactive Miro board export
-- [ ] Real-time Neo4j updates on code changes
-- [ ] VSCode extension for inline visualization
 
 ## 🤖 AIOS Autonomous Development Engine (ADE)
 
-O Synkra AIOS v1.0.0 introduz o **Autonomous Development Engine (ADE)** - um sistema completo para desenvolvimento autônomo que transforma requisitos em código funcional.
+O Synkra AIOS introduz o **Autonomous Development Engine (ADE)** - um sistema completo para desenvolvimento autônomo que transforma requisitos em código funcional.
 
 ### 🎯 O Que é o ADE?
 
@@ -678,42 +582,59 @@ User Request → Spec Pipeline → Execution Engine → QA Review → Working Co
 
 ## Criando Seu Próprio Squad
 
-Expansion packs permitem estender o AIOS para qualquer domínio. Estrutura básica:
+Squads permitem estender o AIOS para qualquer domínio. Estrutura básica:
 
 ```
-squads/seu-pack/
-├── config.yaml           # Configuração do pack
+squads/seu-squad/
+├── config.yaml           # Configuração do squad
 ├── agents/              # Agentes especializados
 ├── tasks/               # Fluxos de trabalho de tarefas
 ├── templates/           # Templates de documentos
 ├── checklists/          # Checklists de validação
 ├── data/                # Base de conhecimento
-├── README.md            # Documentação do pack
+├── README.md            # Documentação do squad
 └── user-guide.md        # Guia do usuário
 ```
 
-Veja o [Guia de Squads](docs/squads.md) para instruções detalhadas.
+Veja o [Guia de Squads](docs/guides/squads-guide.md) para instruções detalhadas.
 
 ## Squads Disponíveis
 
-- **aios-infrastructure-devops** - Infraestrutura e DevOps
-- **expansion-creator** - Criador de Squads
-- **meeting-notes** - Notas e atas de reuniões
+Squads são equipes modulares de agentes IA. Veja a [Visão Geral de Squads](docs/guides/squads-overview.md) para mais informações.
 
 ### Squads Externos
 
 - **[hybrid-ops](https://github.com/SynkraAI/aios-hybrid-ops-pedro-valerio)** - Operações híbridas humano-agente (repositório separado)
 
-Explore o diretório [squads/](squads/) para mais inspiração!
+## AIOS Pro
 
-## Suporte & Comunidade
+O **AIOS Pro** (`@aios-fullstack/pro`) é o módulo premium do Synkra AIOS, oferecendo funcionalidades avançadas para equipes e projetos de maior escala.
 
-- 📖 [Guia da Comunidade](COMMUNITY.md) - Como participar e contribuir
-- 💬 [Discussões GitHub](https://github.com/SynkraAI/aios-core/discussions) - Hub central da comunidade
+> **Disponibilidade restrita:** O AIOS Pro está disponível exclusivamente para membros do **AIOS Cohort Advanced**. [Saiba mais sobre o programa](https://synkra.ai).
+
+### Instalação
+
+```bash
+npm install @aios-fullstack/pro
+```
+
+### Features Premium
+
+- **Squads Avançados** - Squads especializados com capacidades expandidas
+- **Memory Layer** - Memória persistente de padrões e insights entre sessões
+- **Métricas & Analytics** - Dashboard de produtividade e métricas de desenvolvimento
+- **Integrações Enterprise** - Conectores para Jira, Linear, Notion e mais
+- **Configuração em Camadas** - Sistema de configuração L1-L4 com herança
+- **Licenciamento** - Gerenciamento de licença via `aios pro activate --key <KEY>`
+
+Para mais informações, execute `npx aios-core pro --help` após a instalação.
+
+## Suporte
+
+- 🐛 [Rastreador de Issues](https://github.com/SynkraAI/aios-core/issues) - Bug reports e feature requests
 - 💡 [Processo de Features](docs/FEATURE_PROCESS.md) - Como propor novas funcionalidades
-- 🐛 [Rastreador de Issues](https://github.com/SynkraAI/aios-core/issues)
 - 📋 [Como Contribuir](CONTRIBUTING.md)
-- 🗺️ [Roadmap](ROADMAP.md) - Veja o que estamos construindo
+- 🗺️ [Roadmap](docs/roadmap.md) - Veja o que estamos construindo
 - 🤖 [Guia de Squads](docs/guides/squads-guide.md) - Crie equipes de agentes IA
 
 ## Git Workflow e Validação
@@ -791,20 +712,27 @@ Veja também:
 
 - 📋 [Como Contribuir com Pull Requests](docs/how-to-contribute-with-pull-requests.md)
 - 📋 [Guia de Git Workflow](docs/git-workflow-guide.md)
-- 📋 [Checklist de Lançamento](docs/launch-checklist.md)
 
 ## 📄 Legal
 
-| Documento             | English                               | Português                                |
-| --------------------- | ------------------------------------- | ---------------------------------------- |
-| **Licença**           | [MIT License](LICENSE)                | -                                        |
-| **Privacidade**       | [Privacy Policy](PRIVACY.md)          | [Política de Privacidade](PRIVACY-PT.md) |
-| **Termos de Uso**     | [Terms of Use](TERMS.md)              | [Termos de Uso](TERMS-PT.md)             |
-| **Código de Conduta** | [Code of Conduct](CODE_OF_CONDUCT.md) | -                                        |
-| **Contribuição**      | [Contributing](CONTRIBUTING.md)       | -                                        |
-| **Changelog**         | [Version History](CHANGELOG.md)       | -                                        |
+| Documento             | English                                     | Português                             |
+| --------------------- | ------------------------------------------- | ------------------------------------- |
+| **Licença**           | [MIT License](LICENSE)                      | -                                     |
+| **Modelo de Licença** | [Core vs Pro](docs/legal/license-clarification.md) | -                               |
+| **Privacidade**       | [Privacy Policy](docs/legal/privacy.md)     | -                                     |
+| **Termos de Uso**     | [Terms of Use](docs/legal/terms.md)         | -                                     |
+| **Código de Conduta** | [Code of Conduct](CODE_OF_CONDUCT.md)       | [PT-BR](docs/pt/code-of-conduct.md)   |
+| **Contribuição**      | [Contributing](CONTRIBUTING.md)             | [PT-BR](docs/pt/contributing.md)      |
+| **Segurança**         | [Security](docs/security.md)                | [PT-BR](docs/pt/security.md)          |
+| **Comunidade**        | [Community](docs/community.md)              | [PT-BR](docs/pt/community.md)         |
+| **Roadmap**           | [Roadmap](docs/roadmap.md)                  | [PT-BR](docs/pt/roadmap.md)           |
+| **Changelog**         | [Version History](CHANGELOG.md)             | -                                     |
 
 ## Reconhecimentos
+
+This project was originally derived from the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) by [Brian Madison](https://github.com/bmadcode). We thank Brian and all BMad Method contributors for the original work that made this project possible.
+
+**Note:** Some contributors shown in the GitHub contributors graph are inherited from the original BMad Method git history and do not represent active participation in or endorsement of Synkra AIOS.
 
 [![Contributors](https://contrib.rocks/image?repo=SynkraAI/aios-core)](https://github.com/SynkraAI/aios-core/graphs/contributors)
 
