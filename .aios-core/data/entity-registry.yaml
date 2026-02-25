@@ -1,7 +1,7 @@
 metadata:
   version: 1.0.0
-  lastUpdated: '2026-02-16T20:22:35.905Z'
-  entityCount: 508
+  lastUpdated: '2026-02-25T21:18:43.742Z'
+  entityCount: 509
   checksumAlgorithm: sha256
 entities:
   tasks:
@@ -6000,7 +6000,9 @@ entities:
     dev-helper:
       path: .aios-core/core/code-intel/helpers/dev-helper.js
       type: module
-      purpose: Code intelligence helper for @dev agent tasks - IDS G4 automation, duplicate detection, conventions, blast radius
+      purpose: >-
+        Code intelligence helper for @dev agent tasks - IDS G4 automation, duplicate detection, conventions, blast
+        radius
       keywords:
         - code-intel
         - dev-helper
@@ -6009,11 +6011,7 @@ entities:
         - blast-radius
         - conventions
         - reuse
-      usedBy:
-        - dev-develop-story
-        - create-service
-        - dev-suggest-refactoring
-        - build-autonomous
+      usedBy: []
       dependencies:
         - code-intel
       adaptability:
@@ -8355,8 +8353,8 @@ entities:
         score: 0.4
         constraints: []
         extensionPoints: []
-      checksum: sha256:c1266389772b3fcf3e4c91df085bd38dc0b01d0a5f98bdf977d134972ccaf49b
-      lastVerified: '2026-02-15T22:52:07.323Z'
+      checksum: sha256:6a4d90b4d003cac9e3ce389cba7012b7223971dc79bb254b5e5cfbbfbd305baf
+      lastVerified: '2026-02-25T21:18:43.740Z'
     active-modules.verify:
       path: .aios-core/core/memory/__tests__/active-modules.verify.js
       type: module
