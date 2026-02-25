@@ -1,0 +1,287 @@
+# Template Metadata
+# template_id: repo-analysis
+# version: 1.0.0
+# category: research
+# output_format: markdown
+
+# 🔍 Analysis: {{repo_name}} vs AXIS
+
+**Date**: {{analysis_date}}  
+**Analyst**: {{analyst_name}} ({{agent_id}})  
+**Repository**: {{repo_url}}  
+**Interest**: {{interest_reason}}
+
+---
+
+## 📊 Executive Summary
+
+| Dimension | {{repo_name}} | AXIS | Assessment |
+|-----------|---------------|------|------------|
+| **Paradigm** | {{paradigm_external}} | {{paradigm_axis}} | {{paradigm_verdict}} |
+| **Stack Base** | {{stack_external}} | {{stack_axis}} | {{stack_verdict}} |
+| **Orchestration** | {{orchestration_external}} | {{orchestration_axis}} | {{orchestration_verdict}} |
+| **Governance** | {{governance_external}} | {{governance_axis}} | {{governance_verdict}} |
+| **Community** | {{community_external}} | {{community_axis}} | {{community_verdict}} |
+
+**Veredicto**: {{executive_verdict}}
+
+---
+
+## 🏗️ Stack Mapping
+
+### 1. Architecture
+
+#### {{repo_name}}
+```yaml
+{{architecture_external}}
+```
+
+#### AXIS
+```yaml
+{{architecture_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{architecture_overlap}}
+- ❌ Gap: {{architecture_gap}}
+- 🎯 Differential: {{architecture_differential}}
+
+---
+
+### 2. Orchestration
+
+#### {{repo_name}}
+```yaml
+{{orchestration_details_external}}
+```
+
+#### AXIS
+```yaml
+{{orchestration_details_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{orchestration_overlap}}
+- ❌ Gap: {{orchestration_gap}}
+- 🎯 Differential: {{orchestration_differential}}
+
+---
+
+### 3. Data Model & State
+
+#### {{repo_name}}
+```yaml
+{{datamodel_external}}
+```
+
+#### AXIS
+```yaml
+{{datamodel_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{datamodel_overlap}}
+- ❌ Gap: {{datamodel_gap}}
+- 🎯 Differential: {{datamodel_differential}}
+
+---
+
+### 4. Governance & Security
+
+#### {{repo_name}}
+```yaml
+{{governance_details_external}}
+```
+
+#### AXIS
+```yaml
+{{governance_details_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{governance_overlap}}
+- ❌ Gap: {{governance_gap}}
+- 🎯 Differential: {{governance_differential}}
+
+---
+
+### 5. Observability & Telemetry
+
+#### {{repo_name}}
+```yaml
+{{observability_external}}
+```
+
+#### AXIS
+```yaml
+{{observability_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{observability_overlap}}
+- ❌ Gap: {{observability_gap}}
+- 🎯 Differential: {{observability_differential}}
+
+---
+
+### 6. Extensibility & Customization
+
+#### {{repo_name}}
+```yaml
+{{extensibility_external}}
+```
+
+#### AXIS
+```yaml
+{{extensibility_axis}}
+```
+
+**Assessment**:
+- ✅ Overlap: {{extensibility_overlap}}
+- ❌ Gap: {{extensibility_gap}}
+- 🎯 Differential: {{extensibility_differential}}
+
+---
+
+## 🎓 Learnings Applicable to AXIS
+
+### 1. {{learning_1_title}}
+```yaml
+What:
+  {{learning_1_what}}
+
+Why it matters:
+  {{learning_1_why}}
+
+How to apply:
+  {{learning_1_how}}
+```
+
+**Recommendation**: {{learning_1_recommendation}}
+
+---
+
+### 2. {{learning_2_title}}
+```yaml
+What:
+  {{learning_2_what}}
+
+Why it matters:
+  {{learning_2_why}}
+
+How to apply:
+  {{learning_2_how}}
+```
+
+**Recommendation**: {{learning_2_recommendation}}
+
+---
+
+### 3. {{learning_3_title}}
+```yaml
+What:
+  {{learning_3_what}}
+
+Why it matters:
+  {{learning_3_why}}
+
+How to apply:
+  {{learning_3_how}}
+```
+
+**Recommendation**: {{learning_3_recommendation}}
+
+---
+
+## ⚖️ Decision Matrix
+
+### Adopt as Dependency?
+
+| Criterion | Assessment | Notes |
+|-----------|------------|-------|
+| Compatible with AXIS sovereignty? | {{sovereignty_compatible}} | {{sovereignty_notes}} |
+| Adds capabilities we can't build? | {{capabilities_gap}} | {{capabilities_notes}} |
+| Maintained and stable? | {{maintenance_status}} | {{maintenance_notes}} |
+| Licensing compatible? | {{license_compatible}} | {{license_notes}} |
+| Governance alignment? | {{governance_alignment}} | {{governance_notes}} |
+
+**Adoption Decision**: {{adoption_decision}}
+
+---
+
+## 🔮 Consequences of {{strategic_decision_title}}
+
+### Positive
+{{consequences_positive}}
+
+### Negative
+{{consequences_negative}}
+
+### Neutral
+{{consequences_neutral}}
+
+---
+
+### Learn and Diverge?
+
+**Concepts to Extract**:
+{{concepts_to_extract}}
+
+**Implementation Strategy**:
+{{implementation_strategy}}
+
+**Timeline**:
+- Short-term (Q1): {{short_term_actions}}
+- Medium-term (Q2): {{medium_term_actions}}
+- Long-term (2026+): {{long_term_actions}}
+
+---
+
+## 🎯 Strategic Decision
+
+### {{strategic_decision_title}}
+
+**Verdict**: {{strategic_verdict}}
+
+**Reasoning**:
+{{strategic_reasoning}}
+
+**Actions**:
+{{strategic_actions}}
+
+---
+
+## 📌 Recommended Actions
+
+### Short-term (Q1 2026)
+{{q1_actions}}
+
+### Medium-term (Q2 2026)
+{{q2_actions}}
+
+### Long-term (2026+)
+{{long_term_actions}}
+
+---
+
+## 🔗 References
+
+- [{{repo_name}} Repository]({{repo_url}})
+- [{{repo_name}} Documentation]({{docs_url}})
+- [AXIS Architecture](file:///Users/emilyveiga/Documents/AXIS/docs/ARCHITECTURE.md)
+- [Related AXIS Components]({{related_components}})
+
+---
+
+**Next Steps**: {{next_steps}}
+
+---
+
+## 📝 Metadata
+
+**Template Version**: 1.1.0
+**Analysis Date**: {{analysis_date}}
+**Analyst**: {{analyst_name}} ({{agent_id}})
+**Category**: {{category}}
+
+— {{analyst_name}}, {{signature_closing}} 🎯
