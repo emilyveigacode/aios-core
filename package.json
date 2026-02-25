@@ -9,7 +9,8 @@
   },
   "preferGlobal": false,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "files": [
     "bin/",
@@ -29,6 +30,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:health-check": "mocha tests/health-check/**/*.test.js --timeout 30000",
+    "dashboard:dev": "npm run dev --prefix apps/dashboard",
+    "monitor:dev": "npm run dev --prefix apps/monitor-server",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "typecheck": "tsc --noEmit",
     "release": "semantic-release",

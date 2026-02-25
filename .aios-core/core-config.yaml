@@ -3,7 +3,7 @@ project:
   type: EXISTING_AIOS
   installedAt: '2025-01-14T00:00:00Z'
   version: 2.1.0
-user_profile: advanced
+user_profile: bob
 qa:
   qaLocation: docs/qa
 prd:
